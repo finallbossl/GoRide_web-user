@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { Star, ShieldCheck, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { MotorbikeStatus } from '@goride/shared';
 
 interface CarCardProps {
   id: string | number;
@@ -13,13 +15,21 @@ interface CarCardProps {
   image: string;
   badge?: string;
   slug: string;
+  status: MotorbikeStatus;
 }
 
-export default function CarCard({ name, type, price, rating, reviews, image, badge, slug }: CarCardProps) {
+export default function CarCard({ name, type, price, rating, reviews, image, badge, slug, status }: CarCardProps) {
+  const isRented = status === MotorbikeStatus.RENTED;
+  const isUnavailable = status === MotorbikeStatus.MAINTENANCE || status === MotorbikeStatus.UNAVAILABLE;
+  const isBookable = !isRented && !isUnavailable;
+
   return (
     <Link 
-      href={`/cars/${slug}`} 
-      className="group relative flex flex-col overflow-hidden rounded-luxury-lg bg-white border border-[#E7E5E4] transition-all duration-500 hover:shadow-luxury-xl hover:-translate-y-2 hover:border-[#CA8A04]/30"
+      href={isBookable ? `/cars/${slug}` : '#'} 
+      className={cn(
+        "group relative flex flex-col overflow-hidden rounded-luxury-lg bg-white border border-[#E7E5E4] transition-all duration-500",
+        isBookable ? "hover:shadow-luxury-xl hover:-translate-y-2 hover:border-[#CA8A04]/30" : "cursor-not-allowed opacity-80"
+      )}
     >
       {/* Image */}
       <div className="relative aspect-[16/11] overflow-hidden bg-[#FAFAF9]">
@@ -40,6 +50,20 @@ export default function CarCard({ name, type, price, rating, reviews, image, bad
         <div className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-luxury bg-white/90 text-[#1C1917] backdrop-blur-sm border border-[#1C1917]/5 shadow-soft-md">
           <ShieldCheck size={20} />
         </div>
+
+        {/* Status Overlay */}
+        {!isBookable && (
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center p-6 text-center">
+            <div className="bg-white/95 px-6 py-3 rounded-luxury-lg shadow-luxury-xl border border-white/20">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#1C1917] mb-1">
+                {isRented ? 'Hiện đang được thuê' : 'Đang bảo trì'}
+              </p>
+              <p className="text-sm font-bold text-[#CA8A04] italic">
+                {isRented ? 'Elite Choice Booked' : 'Coming Back Soon'}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -64,7 +88,12 @@ export default function CarCard({ name, type, price, rating, reviews, image, bad
             </div>
           </div>
           
-          <div className="flex h-11 w-11 items-center justify-center rounded-luxury bg-[#1C1917] text-[#CA8A04] transition-all duration-500 group-hover:bg-[#CA8A04] group-hover:text-white group-hover:scale-110 shadow-soft-md">
+          <div className={cn(
+            "flex h-11 w-11 items-center justify-center rounded-luxury transition-all duration-500 shadow-soft-md",
+            isBookable 
+              ? "bg-[#1C1917] text-[#CA8A04] group-hover:bg-[#CA8A04] group-hover:text-white group-hover:scale-110" 
+              : "bg-gray-200 text-gray-400"
+          )}>
             <ArrowRight size={20} />
           </div>
         </div>

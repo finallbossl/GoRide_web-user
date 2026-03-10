@@ -20,7 +20,14 @@ export const rentalApi = {
   },
 
   /**
-   * Get rental details by ID
+   * Update rental metadata (return details)
+   */
+  updateMetadata: (id: string, metadata: any) => {
+    return httpClient.put<ApiResponse>(`/rentals/${id}/metadata`, metadata);
+  },
+
+  /**
+   * Get rental by ID
    */
   getById: (id: string) => {
     return httpClient.get<ApiResponse>(`/rentals/${id}`);

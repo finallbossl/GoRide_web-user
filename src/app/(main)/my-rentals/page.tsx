@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { rentalApi } from '@/services/api';
 import { Rental, RentalStatus } from '@goride/shared';
-import { Calendar, ChevronRight, MapPin, Clock, CreditCard, CheckCircle2, History, AlertCircle, Loader2 } from 'lucide-react';
+import { Calendar, ChevronRight, MapPin, Clock, CreditCard, CheckCircle2, History, AlertCircle, Loader2, Upload, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -15,6 +15,16 @@ export default function MyRentalsPage() {
   const [rentals, setRentals] = useState<any[]>([]);
   const [totalRentals, setTotalRentals] = useState(0);
   const [loading, setLoading] = useState(true);
+  
+  // Return Report Modal States
+  const [showReturnModal, setShowReturnModal] = useState(false);
+  const [returnRental, setReturnRental] = useState<any>(null);
+  const [returnKm, setReturnKm] = useState('');
+  const [returnFuel, setReturnFuel] = useState('8');
+  const [returnNote, setReturnNote] = useState('');
+  const [returnImages, setReturnImages] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
   // ... rest of useEffect ...
 
@@ -64,6 +74,7 @@ export default function MyRentalsPage() {
   if (!isLoggedIn) return null;
 
   return (
+    <>
     <section className="min-h-screen bg-[#FAF9F6] pt-32 pb-20 px-6">
       <div className="container mx-auto max-w-6xl">
         {/* Page Header */}
@@ -169,14 +180,28 @@ export default function MyRentalsPage() {
 
                     <div className="flex items-center justify-between pt-8 border-t border-primary/5">
                         <div className="flex items-center gap-4">
-                          <div className="flex -space-x-3">
-                              {[1, 2, 3].map((i) => (
-                                <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-surface overflow-hidden">
-                                  <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Concierge" className="h-full w-full object-cover" />
-                                </div>
-                              ))}
-                          </div>
-                          <p className="text-[10px] font-bold text-primary/40 italic">Đội ngũ hỗ trợ 24/7 đang túc trực</p>
+                           {rental.status === RentalStatus.ONGOING && (
+                             <button
+                               onClick={() => {
+                                 setReturnKm('');
+                                 setReturnFuel('8');
+                                 setReturnNote('');
+                                 setReturnImages([]);
+                                 setReturnRental(rental);
+                                 setShowReturnModal(true);
+                               }}
+                               className="bg-cta text-white py-3 px-6 rounded-2xl text-[10px] font-black tracking-widest hover:bg-cta/90 transition-all shadow-luxury-sm"
+                             >
+                               BÁO CÁO TRẢ XE
+                             </button>
+                           )}
+                           <div className="flex -space-x-3">
+                               {[1, 2, 3].map((i) => (
+                                 <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-surface overflow-hidden">
+                                   <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Concierge" className="h-full w-full object-cover" />
+                                 </div>
+                               ))}
+                           </div>
                         </div>
                         <div className="flex gap-3">
                           {rental.payments?.status !== 'COMPLETED' && rental.status !== RentalStatus.CANCELLED && (
@@ -210,11 +235,164 @@ export default function MyRentalsPage() {
                 <AlertCircle size={40} />
              </div>
              <h3 className="text-2xl font-bold text-primary mb-4">Chưa có hành trình nào</h3>
-             <p className="text-primary/40 mb-10 max-w-sm mx-auto">Hãy bắt đầu chuyến đi đầu tiên và tận hưởng những đặc quyền Elite dành riêng cho bạn.</p>
+             <p className="text-primary/40 mb-10 mx-auto">Hãy bắt đầu chuyến đi đầu tiên và tận hưởng những đặc quyền Elite dành riêng cho bạn.</p>
              <Link href="/cars" className="luxury-btn-primary inline-flex py-4 px-10">KHÁM PHÁ ĐỘI XE</Link>
           </div>
         )}
       </div>
     </section>
+
+    {/* Return Report Modal */}
+    {showReturnModal && returnRental && (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-primary/20 animate-in fade-in duration-300">
+        <div 
+            className="bg-white w-full max-w-xl rounded-[2.5rem] shadow-luxury-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300"
+            onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-8 md:p-10">
+            <div className="flex justify-between items-start mb-8">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-1 w-8 bg-cta rounded-full" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-cta">Báo cáo tình trạng xe</span>
+                </div>
+                <h3 className="text-3xl font-bold text-primary tracking-tight">Hoàn tất <span className="text-cta">Hành trình</span></h3>
+              </div>
+              <button 
+                onClick={() => setShowReturnModal(false)}
+                className="h-10 w-10 rounded-full border border-primary/5 flex items-center justify-center text-primary/40 hover:text-primary transition-colors"
+                title="Đóng"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid gap-6 mb-8">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-primary/30 uppercase tracking-widest pl-1">Số KM hiện tại *</label>
+                  <input 
+                    type="number" 
+                    value={returnKm}
+                    onChange={(e) => setReturnKm(e.target.value)}
+                    placeholder="VD: 12500"
+                    className="w-full bg-[#F5F5F7] border-none rounded-2xl py-4 px-6 text-sm font-bold text-primary focus:ring-2 focus:ring-cta/20 transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-primary/30 uppercase tracking-widest pl-1">Mức xăng (1-8)</label>
+                  <input 
+                    type="number" 
+                    value={returnFuel}
+                    onChange={(e) => setReturnFuel(e.target.value)}
+                    placeholder="8"
+                    className="w-full bg-[#F5F5F7] border-none rounded-2xl py-4 px-6 text-sm font-bold text-primary focus:ring-2 focus:ring-cta/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-primary/30 uppercase tracking-widest pl-1">Ghi chú tình trạng</label>
+                <textarea 
+                  value={returnNote}
+                  onChange={(e) => setReturnNote(e.target.value)}
+                  placeholder="Xe vẫn hoạt động tốt, không trầy xước mới..."
+                  className="w-full bg-[#F5F5F7] border-none rounded-2xl py-4 px-6 text-sm font-medium text-primary focus:ring-2 focus:ring-cta/20 transition-all min-h-[100px]"
+                />
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-primary/30 uppercase tracking-widest pl-1">Hình ảnh thực tế (Tải lên)</label>
+                <div className="grid grid-cols-4 gap-3">
+                    <input 
+                        type="file" 
+                        id="user-return-upload" 
+                        multiple 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={(e) => {
+                            if (e.target.files) {
+                                const urls = Array.from(e.target.files).map(f => URL.createObjectURL(f));
+                                setReturnImages([...returnImages, ...urls]);
+                            }
+                        }}
+                    />
+                    <button 
+                        onClick={() => document.getElementById('user-return-upload')?.click()}
+                        className="aspect-square rounded-2xl border-2 border-dashed border-primary/10 flex flex-col items-center justify-center text-primary/20 hover:border-cta hover:text-cta transition-all bg-primary/[0.02]"
+                    >
+                        <Upload size={20} className="mb-1" />
+                        <span className="text-[8px] font-black uppercase">Tải lên</span>
+                    </button>
+                    {returnImages.map((img, i) => (
+                        <div key={i} className="relative aspect-square rounded-2xl overflow-hidden shadow-soft-xl border border-primary/5 group">
+                            <img src={img} className="h-full w-full object-cover" alt="Preview" />
+                            <button 
+                                onClick={() => setReturnImages(returnImages.filter((_, idx) => idx !== i))}
+                                className="absolute inset-0 bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowReturnModal(false)}
+                className="flex-1 py-4 px-8 rounded-2xl border border-primary/5 text-[10px] font-black tracking-[0.2em] text-primary/40 hover:bg-primary/5 transition-all uppercase"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                disabled={!returnKm || submitting}
+                onClick={async () => {
+                    setSubmitting(true);
+                    try {
+                        const res = await rentalApi.updateMetadata(returnRental.id, { 
+                            km: returnKm, 
+                            fuel: returnFuel, 
+                            note: returnNote,
+                            images: returnImages
+                        });
+                        if (res.success) {
+                            setToast({ message: 'Báo cáo đã gửi thành công!', type: 'success' });
+                            setTimeout(() => setToast(null), 5000);
+                            setShowReturnModal(false);
+                            // Refresh list
+                            const response = await rentalApi.getMyRentals();
+                            if (response.success) setRentals(response.data.rentals || []);
+                        }
+                    } catch (e) {
+                        setToast({ message: 'Gửi báo cáo thất bại.', type: 'error' });
+                        setTimeout(() => setToast(null), 5000);
+                    } finally {
+                        setSubmitting(false);
+                    }
+                }}
+                className="flex-[2] luxury-btn-primary py-4 px-8 rounded-2xl text-[10px] font-black tracking-[0.2em] flex items-center justify-center gap-2 disabled:opacity-50 disabled:grayscale transition-all"
+              >
+                {submitting ? <Loader2 className="animate-spin" size={14} /> : 'GỬI BÁO CÁO TRẢ XE'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+    {/* Toast Notification */}
+    {toast && (
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] animate-in slide-in-from-bottom-10 duration-500">
+        <div className={cn(
+          "px-8 py-4 rounded-3xl shadow-luxury-2xl flex items-center gap-4 border backdrop-blur-xl",
+          toast.type === 'success' ? "bg-emerald-500/90 text-white border-white/20" : "bg-red-500/90 text-white border-white/20"
+        )}>
+          {toast.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+          <p className="text-xs font-bold uppercase tracking-widest">{toast.message}</p>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

@@ -229,6 +229,7 @@ function CarsContent() {
                       reviews="120+" // Placeholder
                       image={bike.images[0] || 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800'}
                       slug={bike.id}
+                      status={bike.status}
                     />
                   );
                 })}

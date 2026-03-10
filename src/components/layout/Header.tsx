@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, MapPin, Gift, BookOpen, UserCircle, X, CarFront, Bell, ClipboardList } from 'lucide-react';
+import { Menu, MapPin, Gift, BookOpen, UserCircle, X, CarFront, Bell, ClipboardList, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';

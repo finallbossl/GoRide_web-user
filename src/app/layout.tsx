@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { AuthProvider } from '@/context/AuthContext'
+import ChatWidget from '@/components/common/ChatWidget'
 
 export const metadata: Metadata = {
   title: 'GoRide Premium | Elite Motorcycle Journeys & Rentals',
@@ -22,6 +23,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          <ChatWidget />
         </AuthProvider>
       </body>
     </html>

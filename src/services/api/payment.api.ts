@@ -7,8 +7,10 @@ import { ApiResponse } from '@goride/shared';
 export const paymentApi = {
   /**
    * Get payment details for a specific rental
+  /**
+   * Create a PayOS payment link for a rental
    */
-  getByRentalId: (rentalId: string) => {
-    return httpClient.get<ApiResponse>(`/payments/rental/${rentalId}`);
+  createPaymentLink: (rentalId: string) => {
+    return httpClient.post<ApiResponse>('/payment/create-payment-link', { rentalId });
   },
 };

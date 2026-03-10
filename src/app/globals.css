@@ -71,7 +71,15 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/90 backdrop-blur-sm border border-primary/10 shadow-soft-md transition-all duration-300;
+    @apply bg-white/10 backdrop-blur-2xl border border-white/20 shadow-luxury-xl transition-all duration-500 hover:bg-white/15;
+  }
+
+  .glass-card-dark {
+    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-luxury-xl transition-all duration-500 hover:bg-slate-900/50;
+  }
+
+  .liquid-glass {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-tr before:from-white/5 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-700;
   }
 
   .luxury-btn-primary {
@@ -93,7 +101,18 @@
   }
 
   .liquid-hover {
-    @apply transition-all duration-300 ease-out hover:shadow-soft-lg hover:-translate-y-1;
+    @apply transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-luxury-xl hover:-translate-y-2;
+  }
+
+  @keyframes liquid-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(2%, 4%) scale(1.05); }
+    66% { transform: translate(-3%, 2%) scale(0.95); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  .animate-liquid {
+    animation: liquid-drift 20s ease-in-out infinite;
   }
 
   /* Force horizontal text layout */

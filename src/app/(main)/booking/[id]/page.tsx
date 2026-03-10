@@ -4,14 +4,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
-import { motorbikeApi, rentalApi } from '@/services/api';
+import { motorbikeApi, rentalApi, paymentApi } from '@/services/api';
 import { Motorbike, CreateRentalDto, RentalStatus } from '@goride/shared';
 import {
   Star, MapPin, Calendar, Clock, ShieldCheck,
   Heart, Share2, MessageSquare, ChevronRight, 
   ArrowLeft, User, Phone, FileText, Upload, 
   CreditCard, CheckCircle2, X, AlertCircle, Camera,
-  ChevronDown, Loader2, LocateFixed
+  ChevronDown, Loader2, LocateFixed, ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -91,32 +91,34 @@ function BookingContent() {
     returnLocation: 'Quy Nhơn Coastal Hub',
     customReturnLocation: '',
     notes: '',
-    paymentMethod: 'sepay' // Default to SePay
+    paymentMethod: 'online' // Default to Online Payment
   });
+
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [createdRental, setCreatedRental] = useState<any>(null);
   const [paymentStatus, setPaymentStatus] = useState<string>('PENDING');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Polling for payment status
-  useEffect(() => {
-    let interval: any;
-    if (isSuccess && createdRental && bookingData.paymentMethod === 'sepay' && paymentStatus !== 'COMPLETED') {
-      interval = setInterval(async () => {
-        try {
-          const response = await rentalApi.getById(createdRental.id);
-          if (response.success && response.data.status === 'CONFIRMED') {
-            setPaymentStatus('COMPLETED');
-            clearInterval(interval);
-          }
-        } catch (error) {
-          console.error('Polling error:', error);
-        }
-      }, 5000); // Poll every 5 seconds
+  // Handle Online Payment
+  const handleOnlinePayment = async () => {
+    if (!createdRental?.id) return;
+    setPaymentLoading(true);
+    try {
+      const response = await paymentApi.createPaymentLink(createdRental.id);
+      if (response.success && response.data?.checkoutUrl) {
+        window.location.href = response.data.checkoutUrl;
+      } else {
+        alert('Không thể tạo liên kết thanh toán. Vui lòng thử lại sau.');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Có lỗi xảy ra khi kết nối với cổng thanh toán.');
+    } finally {
+      setPaymentLoading(false);
     }
-    return () => clearInterval(interval);
-  }, [isSuccess, createdRental, bookingData.paymentMethod, paymentStatus]);
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -163,8 +165,6 @@ function BookingContent() {
         pickupLocation: getFinalLocation('pickup'),
         returnLocation: getFinalLocation('return'),
         notes: `SĐT liên hệ: ${bookingData.phone} | Phương thức: ${bookingData.paymentMethod}${bookingData.notes ? ` | Ghi chú: ${bookingData.notes}` : ''}`,
-        totalPrice: totalPriceRaw,
-        numberOfDays: days
       };
 
       const response = await rentalApi.create(rentalDto);
@@ -184,113 +184,130 @@ function BookingContent() {
   };
 
   if (isSuccess && createdRental) {
-    const qrUrl = `/QR_Code.png`;
-
   return (
-    <main className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF9F6] px-4 py-10 md:py-20 overflow-x-hidden">
-      
-      <div className="w-full max-w-[640px] bg-white rounded-[40px] md:rounded-[60px] shadow-luxury-2xl border border-primary/5 p-8 md:p-16 text-center space-y-10 relative z-10 mx-auto">
+    <main className="min-h-screen bg-background relative overflow-hidden py-16 md:py-24 px-4" style={{ width: '100vw', maxWidth: '100%' }}>
+      {/* BACKGROUND ELEMENTS */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-cta/10 rounded-full blur-[140px] animate-liquid" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-500/5 rounded-full blur-[140px] animate-liquid" style={{ animationDelay: '-5s' }} />
+      </div>
 
+      <div className="mx-auto glass-card rounded-[2rem] md:rounded-[3rem] p-4 sm:p-6 md:p-14 text-center space-y-8 md:space-y-12 relative z-10 border-primary/10 shadow-luxury-2xl backdrop-blur-3xl" style={{ width: '100%', maxWidth: '768px', minWidth: 'min(95vw, 600px)', display: 'block' }}>
+        
         {/* ICON SUCCESS */}
-        <div className="relative mx-auto w-20 h-20 md:w-28 md:h-28">
-          <div className="absolute inset-0 rounded-[28px] bg-emerald-500/10 animate-pulse" />
-          <div className="relative w-full h-full rounded-[28px] md:rounded-[32px] bg-emerald-500 flex items-center justify-center text-white shadow-lg">
-            <CheckCircle2 size={32} strokeWidth={2.5} />
+        <div className="relative mx-auto w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-6 md:mb-8" style={{ display: 'block' }}>
+          <div className="absolute inset-0 rounded-2xl md:rounded-[2rem] bg-emerald-500/20 animate-pulse blur-xl md:blur-2xl" />
+          <div className="relative w-full h-full rounded-2xl md:rounded-[2rem] bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white shadow-luxury-md border border-white/20">
+            <CheckCircle2 className="w-10 h-10 sm:w-14 sm:h-14" strokeWidth={2.5} />
           </div>
         </div>
 
         {/* TEXT CONTENT */}
-        <div className="space-y-4 px-2 block w-full">
-          <h3 className="text-3xl md:text-5xl font-black text-primary leading-[1.2] tracking-tight text-center w-full block">
-            {paymentStatus === 'COMPLETED' ? 'Thanh toán thành công!' : 'Hành trình sẵn sàng!'}
-          </h3>
-          <div className="flex flex-col items-center gap-4 w-full">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-[10px] md:text-xs text-primary/30 font-black uppercase tracking-[0.3em]">Mã đặt chỗ</span>
-              <span className="text-sm md:text-base text-cta font-bold tracking-widest bg-cta/5 px-6 py-2 rounded-full border border-cta/10 italic">
+        <div className="space-y-4 md:space-y-6 block w-full">
+          <div>
+            <span className="text-[10px] sm:text-xs md:text-sm text-cta font-black uppercase tracking-[0.3em] md:tracking-[0.4em] mb-3 md:mb-4 block animate-in fade-in slide-in-from-bottom-2 duration-700">Booking Confirmed</span>
+            <h3 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-primary leading-[1.1] tracking-tight text-center w-full block drop-shadow-sm px-1 sm:px-2">
+              {paymentStatus === 'COMPLETED' ? 'Thanh toán thành công!' : 'Hành trình sẵn sàng!'}
+            </h3>
+          </div>
+
+          <div className="flex flex-col items-center gap-6 md:gap-8 w-full animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="flex flex-col items-center gap-3 md:gap-4 w-full px-2">
+              <span className="text-[10px] sm:text-xs md:text-sm text-primary/40 font-black uppercase tracking-[0.2em] sm:tracking-[0.3em]">Mã đặt chỗ</span>
+              <span className="text-xl sm:text-2xl md:text-4xl text-primary font-bold tracking-[0.15em] sm:tracking-[0.2em] bg-primary/5 px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-6 rounded-2xl md:rounded-[2rem] border border-primary/10 shadow-inner break-all">
                 #{createdRental.id.substring(0, 8).toUpperCase()}
               </span>
             </div>
             
-            <div className="flex flex-wrap items-center justify-center gap-6 py-4 border-y border-primary/5 w-full max-w-sm">
-                <div className="flex flex-col items-center gap-1">
-                   <span className="text-[9px] font-black text-primary/20 uppercase tracking-widest">Nhận xe</span>
-                   <span className="text-[11px] font-bold text-primary max-w-[140px] truncate">
-                    {bookingData.pickupLocation === 'Giao xe tận nơi' ? (bookingData.customPickupLocation || 'Giao tận nơi') : bookingData.pickupLocation}
-                   </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-primary/10 border border-primary/10 w-full rounded-2xl md:rounded-[2rem] overflow-hidden shadow-sm md:shadow-luxury-sm backdrop-blur-md">
+                <div className="bg-white/60 p-5 sm:p-6 md:p-10 flex flex-col items-center justify-center gap-2 md:gap-3 transition-all hover:bg-white/80 group">
+                   <span className="text-[9px] sm:text-[10px] md:text-xs font-black text-primary/40 uppercase tracking-widest">Nhận xe</span>
+                   <div className="flex items-center justify-center gap-2 md:gap-3">
+                     <MapPin className="text-cta shrink-0 group-hover:scale-110 transition-transform w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                     <span className="text-sm sm:text-base md:text-xl font-bold text-primary text-center">
+                      {bookingData.pickupLocation === 'Giao xe tận nơi' ? (bookingData.customPickupLocation || 'Giao tận nơi') : bookingData.pickupLocation}
+                     </span>
+                   </div>
                 </div>
-                <div className="h-8 w-px bg-primary/5 hidden sm:block" />
-                <div className="flex flex-col items-center gap-1">
-                   <span className="text-[9px] font-black text-primary/20 uppercase tracking-widest">Trả xe</span>
-                   <span className="text-[11px] font-bold text-primary max-w-[140px] truncate">
-                    {bookingData.returnLocation === 'Trả xe tại điểm hẹn' ? (bookingData.customReturnLocation || 'Trả tại điểm hẹn') : bookingData.returnLocation}
-                   </span>
+                <div className="bg-white/60 p-5 sm:p-6 md:p-10 flex flex-col items-center justify-center gap-2 md:gap-3 transition-all hover:bg-white/80 group border-t md:border-t-0 md:border-l border-primary/10">
+                   <span className="text-[9px] sm:text-[10px] md:text-xs font-black text-primary/40 uppercase tracking-widest">Trả xe</span>
+                   <div className="flex items-center justify-center gap-2 md:gap-3">
+                     <LocateFixed className="text-cta shrink-0 group-hover:scale-110 transition-transform w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                     <span className="text-sm sm:text-base md:text-xl font-bold text-primary text-center">
+                      {bookingData.returnLocation === 'Trả xe tại điểm hẹn' ? (bookingData.customReturnLocation || 'Trả tại điểm hẹn') : bookingData.returnLocation}
+                     </span>
+                   </div>
                 </div>
             </div>
           </div>
         </div>
 
-        {bookingData.paymentMethod === 'sepay' && paymentStatus !== 'COMPLETED' && (
-          <div className="bg-[#FAF9F6] rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-10 border border-cta/10 space-y-8 shadow-luxury-sm w-full block">
-            <div className="flex flex-col items-center gap-6 w-full">
-              <div className="space-y-3 w-full">
-                 <p className="text-[10px] font-black text-cta/40 uppercase tracking-[0.4em]">VietQR</p>
-                 <div className="bg-white p-6 rounded-[2rem] shadow-luxury-md border border-cta/5 inline-block">
-                    <img src={qrUrl} alt="VietQR" className="w-48 h-48 md:w-64 md:h-64 object-contain mx-auto" />
-                 </div>
+        {bookingData.paymentMethod === 'online' && paymentStatus !== 'COMPLETED' && (
+          <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-primary/10 space-y-8 md:space-y-10 shadow-md md:shadow-luxury-lg w-full block animate-in fade-in zoom-in-95 duration-700 delay-300">
+            <div className="flex flex-col items-center gap-6 md:gap-8 w-full">
+              <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-sm md:shadow-luxury-md border border-primary/10 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-cta/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <CreditCard className="w-12 h-12 sm:w-16 sm:h-16 text-primary relative z-10" />
               </div>
-              <div className="text-center space-y-6 w-full block">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-black text-cta uppercase tracking-[0.2em]">Quét mã để thanh toán tự động</p>
-                  <p className="text-3xl md:text-5xl font-bold text-primary tracking-tighter italic">
-                    {Number(createdRental.totalPrice).toLocaleString('vi-VN')} <span className="text-lg">VNĐ</span>
-                  </p>
+              
+              <div className="text-center space-y-3 md:space-y-4 px-1 sm:px-2">
+                <h4 className="text-2xl sm:text-3xl md:text-4xl font-black text-primary uppercase tracking-tight">Thanh toán trực tuyến</h4>
+                <p className="text-sm sm:text-base md:text-lg text-primary/60 font-medium leading-relaxed max-w-[480px] mx-auto italic">
+                  Hành trình Elite đang chờ bạn. Hoàn tất thanh toán qua GoRide Pay để mở khóa ưu đãi độc quyền.
+                </p>
+              </div>
+
+              <div className="w-full space-y-6 md:space-y-8">
+                <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-3 md:gap-4 pb-6 md:pb-8 border-b border-primary/10">
+                  <span className="text-[10px] sm:text-xs md:text-sm font-black text-primary/40 uppercase tracking-[0.2em] sm:tracking-[0.3em]">Thành tiền</span>
+                  <div className="text-center sm:text-right">
+                    <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-cta drop-shadow-[0_0_15px_rgba(202,138,4,0.15)] break-all">{Number(createdRental.totalPrice).toLocaleString('vi-VN')}</span>
+                    <span className="text-xs sm:text-base md:text-lg font-bold text-cta ml-2 uppercase">VNĐ</span>
+                  </div>
                 </div>
 
-                <div className="grid gap-4 w-full max-w-sm mx-auto">
-                   <div className="bg-white p-4 rounded-2xl border border-primary/5 shadow-soft-sm flex items-center justify-between group hover:border-cta/20 transition-all">
-                      <div className="text-left">
-                         <p className="text-[8px] font-black text-primary/30 uppercase tracking-widest mb-1">Nội dung chuyển khoản</p>
-                         <p className="text-xs font-bold text-primary tracking-wider">{createdRental.id}</p>
-                      </div>
-                      <button 
-                        onClick={() => copyToClipboard(createdRental.id)}
-                        className="h-10 w-10 rounded-xl bg-cta/5 text-cta flex items-center justify-center hover:bg-cta hover:text-white transition-all shadow-soft-sm"
-                      >
-                         <FileText size={16} />
-                      </button>
-                   </div>
-                   
-                   <div className="bg-white p-4 rounded-2xl border border-primary/5 shadow-soft-sm text-left">
-                      <p className="text-[8px] font-black text-primary/30 uppercase tracking-widest mb-1">Thông tin hưởng thụ</p>
-                      <p className="text-xs font-bold text-primary">MB Bank - GORIDE ELITE</p>
-                      <p className="text-xs font-medium text-primary/60">0393273111</p>
-                   </div>
+                <div className="w-full">
+                  <button 
+                    onClick={handleOnlinePayment}
+                    disabled={paymentLoading}
+                    className="w-full h-14 sm:h-20 md:h-24 rounded-2xl md:rounded-[2rem] bg-gradient-to-r from-cta to-yellow-600 text-white flex items-center justify-center gap-3 md:gap-4 text-[11px] sm:text-sm md:text-lg font-black tracking-[0.2em] sm:tracking-[0.3em] shadow-md sm:shadow-luxury-cta hover:shadow-luxury-cta-hover hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 group px-3 md:px-4"
+                  >
+                    {paymentLoading ? (
+                      <Loader2 className="animate-spin w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                    ) : (
+                      <>
+                        <span className="truncate">THANH TOÁN NGAY</span>
+                        <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform shrink-0" />
+                      </>
+                    )}
+                  </button>
                 </div>
+              </div>
 
-                <div className="max-w-[320px] mx-auto bg-cta/5 p-4 rounded-2xl border border-cta/10">
-                  <p className="text-[10px] md:text-[11px] text-cta font-bold leading-relaxed italic block">
-                    QUAN TRỌNG: Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự động xác nhận trong 1-3 phút.
-                  </p>
-                </div>
+              <div className="flex items-center justify-center gap-2 md:gap-3 opacity-50 w-full px-2">
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
+                <p className="text-[9px] sm:text-[10px] md:text-xs text-primary font-black uppercase tracking-widest text-center">
+                  Bảo vệ bởi hệ thống mã hóa GoRide Shield
+                </p>
               </div>
             </div>
           </div>
         )}
 
         {/* ACTION BUTTONS */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-8 w-full">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 pt-6 md:pt-8 w-full animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-500">
           <Link
             href="/my-rentals"
-            className="flex-1 h-16 md:h-20 flex items-center justify-center gap-3 rounded-2xl md:rounded-3xl bg-primary text-white text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-cta transition shadow-luxury-lg px-8 no-wrap"
+            className="w-full sm:flex-1 h-14 sm:h-20 md:h-24 flex items-center justify-center gap-3 md:gap-4 rounded-2xl md:rounded-[2rem] bg-primary/5 border border-primary/10 text-primary text-[11px] sm:text-sm md:text-lg font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] hover:bg-primary/10 hover:-translate-y-1 transition-all duration-300 shadow-sm sm:shadow-luxury-sm group px-3 md:px-4"
           >
-            XEM HÀNH TRÌNH <ChevronRight size={16} />
+            <span className="truncate">QUẢN LÝ ĐƠN</span>
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform shrink-0" />
           </Link>
           <Link
             href="/"
-            className="flex-1 h-16 md:h-20 flex items-center justify-center rounded-2xl md:rounded-3xl border border-primary/10 text-primary text-[10px] md:text-xs font-black uppercase tracking-widest hover:border-cta hover:text-cta transition px-8 no-wrap"
+            className="w-full sm:flex-1 h-14 sm:h-20 md:h-24 flex items-center justify-center rounded-2xl md:rounded-[2rem] bg-white border border-primary/10 text-primary/60 text-[11px] sm:text-sm md:text-lg font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] hover:text-primary hover:-translate-y-1 transition-all duration-300 shadow-sm sm:shadow-luxury-sm px-3 md:px-4"
           >
-            VỀ TRANG CHỦ
+            <span className="truncate">VỀ TRANG CHỦ</span>
           </Link>
         </div>
       </div>
@@ -521,7 +538,7 @@ function BookingContent() {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   {[
-                    { id: 'sepay', label: 'Chuyển khoản SePay', price: 'Tự động xác nhận', desc: 'Thanh toán qua QR ngân hàng, hệ thống tự động xác nhận sau 1-3 phút.', icon: <CheckCircle2 size={18}/> },
+                    { id: 'online', label: 'Thanh toán Online', price: 'Xác nhận ngay', desc: 'Thanh toán an toàn qua GoRide Pay (PayOS). Xác nhận hành trình tức thì.', icon: <CheckCircle2 size={18}/> },
                     { id: 'deposit', label: 'Đặt cọc Elite Hub', price: (200000).toLocaleString('vi-VN') + " VNĐ", desc: 'Chỉ cọc phí giữ xe, thanh toán còn lại khi nhận xe.', icon: <CheckCircle2 size={18}/> },
                     { id: 'full', label: 'Thanh toán trọn gói', price: (totalPriceRaw * 0.95).toLocaleString('vi-VN') + " VNĐ", desc: 'Ưu đãi Elite giảm 5% khi thanh toán Online 100%.', icon: <Star size={18}/> }
                   ].map((method) => (
