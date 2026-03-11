@@ -24,8 +24,8 @@ export default function CarCard({ name, type, price, rating, reviews, image, bad
   const isBookable = !isRented && !isUnavailable;
 
   return (
-    <Link 
-      href={isBookable ? `/cars/${slug}` : '#'} 
+    <Link
+      href={isBookable ? `/motorbike/${slug}` : '#'}
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-luxury-lg bg-white border border-[#E7E5E4] transition-all duration-500",
         isBookable ? "hover:shadow-luxury-xl hover:-translate-y-2 hover:border-[#CA8A04]/30" : "cursor-not-allowed opacity-80"
@@ -33,12 +33,12 @@ export default function CarCard({ name, type, price, rating, reviews, image, bad
     >
       {/* Image */}
       <div className="relative aspect-[16/11] overflow-hidden bg-[#FAFAF9]">
-        <img 
-          src={image} 
-          alt={name} 
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        
+
         {/* Badge */}
         {badge && (
           <div className="absolute top-4 left-4 rounded-luxury bg-[#1C1917] px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#CA8A04] shadow-soft-md whitespace-nowrap">
@@ -87,11 +87,11 @@ export default function CarCard({ name, type, price, rating, reviews, image, bad
               <span className="text-[10px] font-bold text-[#44403C]/40 uppercase tracking-widest">/day</span>
             </div>
           </div>
-          
+
           <div className={cn(
             "flex h-11 w-11 items-center justify-center rounded-luxury transition-all duration-500 shadow-soft-md",
-            isBookable 
-              ? "bg-[#1C1917] text-[#CA8A04] group-hover:bg-[#CA8A04] group-hover:text-white group-hover:scale-110" 
+            isBookable
+              ? "bg-[#1C1917] text-[#CA8A04] group-hover:bg-[#CA8A04] group-hover:text-white group-hover:scale-110"
               : "bg-gray-200 text-gray-400"
           )}>
             <ArrowRight size={20} />

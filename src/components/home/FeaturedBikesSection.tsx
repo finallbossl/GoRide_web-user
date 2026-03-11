@@ -34,11 +34,11 @@ export default function FeaturedBikesSection() {
     <section className="bg-[#FAF9F6] py-28 overflow-hidden relative">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#CA8A04]/20 to-transparent" />
       <div className="container">
-        <SectionHeader 
-          title="Đội Xe Nổi Bật" 
-          subtitle="Những mẫu xe đời mới nhất, bảo trì định kỳ, sẵn sàng cùng bạn chinh phục mọi hành trình." 
+        <SectionHeader
+          title="Đội Xe Nổi Bật"
+          subtitle="Những mẫu xe đời mới nhất, bảo trì định kỳ, sẵn sàng cùng bạn chinh phục mọi hành trình."
         />
-        
+
         {loading ? (
           <div className="mt-12 flex justify-center py-20">
             <Loader2 className="animate-spin text-primary" size={40} />
@@ -48,7 +48,7 @@ export default function FeaturedBikesSection() {
             {bikes.map((bike: Motorbike) => {
               const bikeTypeLabel = bike.type === 'SCOOTER' ? 'Xe Tay Ga' : bike.type === 'MANUAL' ? 'Xe Số' : 'Xe Côn Tay';
               return (
-                <CarCard 
+                <CarCard
                   key={bike.id}
                   id={bike.id}
                   name={bike.name}
@@ -70,9 +70,9 @@ export default function FeaturedBikesSection() {
         )}
 
         <div className="mt-16 flex justify-center">
-          <Link href="/cars" className="luxury-btn-outline group flex items-center gap-2 whitespace-nowrap">
-             Xem Tất Cả Xe
-             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+          <Link href="/motorbike" className="luxury-btn-outline group flex items-center gap-2 whitespace-nowrap">
+            Xem Tất Cả Xe
+            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
       </div>
