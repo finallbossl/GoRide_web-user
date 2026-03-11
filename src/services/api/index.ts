@@ -6,6 +6,7 @@ import { promotionApi } from './promotion.api';
 import { userApi } from './user.api';
 import { paymentApi } from './payment.api';
 import { chatApi } from './chat.api';
+import { locationApi } from './location.api';
 
 export * from './auth.api';
 export * from './motorbike.api';
@@ -15,6 +16,7 @@ export * from './promotion.api';
 export * from './user.api';
 export * from './payment.api';
 export * from './chat.api';
+export * from './location.api';
 
 /**
  * Central API object grouping all services
@@ -28,6 +30,7 @@ export const api = {
   user: userApi,
   payment: paymentApi,
   chat: chatApi,
+  location: locationApi,
 };
 
 export default api;

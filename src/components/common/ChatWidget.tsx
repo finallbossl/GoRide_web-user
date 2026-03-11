@@ -37,7 +37,7 @@ const ChatWidget = () => {
               return newMessages;
             }
           }
-          
+
           return [...prev, msg];
         });
       });
@@ -82,17 +82,21 @@ const ChatWidget = () => {
 
     try {
       console.log('ChatWidget: Sending message to', adminId, 'content:', content);
+
+      // Send via HTTP API instead of just socket (which may not save to DB)
+      const res = await api.chat.sendMessage(adminId, content);
+
+      if (res.success && res.data) {
+        // Option 1: rely on socket to receive it back, or just append the returned msg
+        setMessages(prev => {
+          if (prev.find(m => m.id === res.data.id)) return prev;
+          return [...prev, res.data];
+        });
+      }
+
+      // Also emit via socket for real-time (optional if backend does it, but keeping it just in case)
       socketService.sendMessage({ receiverId: adminId, content });
-      
-      // Optimistic update so the user at least sees their own message immediately
-      const tempMsg = {
-        id: Date.now(),
-        senderId: user?.id,
-        content: content,
-        createdAt: new Date().toISOString(),
-        isTemp: true
-      };
-      setMessages(prev => [...prev, tempMsg]);
+
     } catch (error) {
       console.error('ChatWidget: Error sending message:', error);
     }
@@ -105,9 +109,8 @@ const ChatWidget = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 ${
-          isOpen ? 'bg-primary rotate-90' : 'bg-cta text-white'
-        }`}
+        className={`w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 ${isOpen ? 'bg-primary rotate-90' : 'bg-cta text-white'
+          }`}
       >
         {isOpen ? (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -148,11 +151,10 @@ const ChatWidget = () => {
                   className={`flex ${msg.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                      msg.senderId === user?.id
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.senderId === user?.id
                         ? 'bg-cta text-white rounded-br-none'
                         : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-none'
-                    }`}
+                      }`}
                   >
                     {msg.content}
                     <div className={`text-[10px] mt-1 opacity-60 text-right ${msg.senderId === user?.id ? 'text-white' : 'text-gray-500'}`}>

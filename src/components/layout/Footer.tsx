@@ -23,9 +23,9 @@ export default function Footer() {
             </p>
             <div className="mt-8 flex gap-3">
               {[Facebook, Instagram, MessageCircle].map((Icon, i) => (
-                <a 
-                  key={i} 
-                  href="#" 
+                <a
+                  key={i}
+                  href="#"
                   className="flex h-10 w-10 items-center justify-center rounded-luxury border border-primary/10 text-rich-text/40 transition-all duration-200 hover:border-cta hover:text-cta hover:bg-surface hover:-translate-y-0.5"
                 >
                   <Icon size={18} />
@@ -39,7 +39,7 @@ export default function Footer() {
             <h4 className="font-semibold text-sm uppercase tracking-wider text-primary mb-6 whitespace-nowrap">Dịch vụ</h4>
             <ul className="flex flex-col gap-3 text-sm font-medium text-rich-text/60">
               {[
-                { name: 'Danh sách xe', href: '/cars' },
+                { name: 'Danh sách xe', href: '/motorbike' },
                 { name: 'Điểm nhận xe', href: '/locations' },
                 { name: 'Ưu đãi', href: '/promotions' },
                 { name: 'Chính sách', href: '/tos' }
@@ -63,7 +63,7 @@ export default function Footer() {
                   <MapPin size={16} />
                 </div>
                 <span className="text-sm font-medium leading-relaxed text-rich-text/60 mt-0.5">
-                  123 Đường Xuân Diệu, Phường Hải Cảng, <br/>TP. Quy Nhơn, Bình Định
+                  123 Đường Xuân Diệu, Phường Hải Cảng, <br />TP. Quy Nhơn, Bình Định
                 </span>
               </li>
               <li className="flex items-center gap-3">

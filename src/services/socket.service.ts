@@ -1,6 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://prn-232-be.vercel.app/api/v1';
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || API_URL.replace('/api/v1', '');
 
 class SocketService {
     private socket: Socket | null = null;
