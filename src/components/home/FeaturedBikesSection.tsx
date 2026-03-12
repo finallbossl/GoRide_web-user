@@ -58,6 +58,7 @@ export default function FeaturedBikesSection() {
                   reviews="120+"
                   image={bike.images?.[0] || 'https://images.unsplash.com/photo-1558981403-c5f91cbba527?auto=format&fit=crop&q=80&w=800'}
                   slug={bike.id}
+                  status={bike.status}
                 />
               );
             })}
