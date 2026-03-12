@@ -18,4 +18,11 @@ export const promotionApi = {
   getById: (id: string) => {
     return httpClient.get<ApiResponse>(`/promotions/${id}`);
   },
+
+  /**
+   * Validate and apply a promotion code
+   */
+  applyCode: (code: string) => {
+    return httpClient.get<ApiResponse>(`/promotions/code/${code}`);
+  },
 };
