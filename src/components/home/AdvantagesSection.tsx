@@ -4,7 +4,7 @@ import SectionHeader from '@/components/common/SectionHeader';
 import { advantages } from '@/constants/homeData';
 import { Zap, Bike, Banknote, ShieldCheck } from 'lucide-react';
 
-const iconMap = {
+const iconMap: Record<string, any> = {
   fast: Zap,
   bike: Bike,
   price: Banknote,
