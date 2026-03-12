@@ -204,7 +204,7 @@ export default function MyRentalsPage() {
                           </div>
                         </div>
                         <div className="flex gap-3">
-                          {rental.payments?.status !== 'COMPLETED' && rental.status !== RentalStatus.CANCELLED && (
+                          {rental.payments?.status !== 'COMPLETED' && rental.status !== RentalStatus.CANCELLED && rental.status !== RentalStatus.CONFIRMED && (
                             <Link
                               href={`/my-rentals/${rental.id}`}
                               className="bg-cta/10 text-cta hover:bg-cta hover:text-white transition-all py-3.5 px-6 rounded-2xl text-[10px] font-black tracking-widest flex items-center gap-2"

@@ -297,7 +297,7 @@ export default function RentalDetailPage() {
             <div className="glass-card bg-white p-10 rounded-[3rem] border border-primary/5 shadow-luxury-lg">
               <h3 className="text-lg font-black text-primary uppercase tracking-widest mb-8">Bản kê chi phí</h3>
               
-              {rental.payments?.status !== 'COMPLETED' && rental.status !== RentalStatus.CANCELLED && (
+              {rental.payments?.status !== 'COMPLETED' && rental.status !== RentalStatus.CANCELLED && rental.status !== RentalStatus.CONFIRMED && (
                 <div className="mb-8">
                   <div className="p-8 bg-cta/5 rounded-[2.5rem] border border-cta/10 flex flex-col items-center gap-6 text-center shadow-inner-sm mb-6">
                     <div className="bg-white p-4 rounded-3xl shadow-soft-md border border-cta/5">

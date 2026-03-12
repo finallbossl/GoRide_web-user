@@ -240,63 +240,9 @@ function BookingContent() {
     }
   };
 
-  // Ẩn nút/thông báo thanh toán nếu đã xác nhận hoặc đã thanh toán
-  {
-    bookingData.paymentMethod === 'online' && paymentStatus !== 'COMPLETED' && createdRental?.status !== 'CONFIRMED' && (
-      <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-primary/10 space-y-8 md:space-y-10 shadow-md md:shadow-luxury-lg w-full block animate-in fade-in zoom-in-95 duration-700 delay-300">
-        <div className="flex flex-col items-center gap-6 md:gap-8 w-full">
-          <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-sm md:shadow-luxury-md border border-primary/10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-cta/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <CreditCard className="w-12 h-12 sm:w-16 sm:h-16 text-primary relative z-10" />
-          </div>
 
-          <div className="text-center space-y-3 md:space-y-4 px-1 sm:px-2">
-            <h4 className="text-2xl sm:text-3xl md:text-4xl font-black text-primary uppercase tracking-tight">Thanh toán trực tuyến</h4>
-            <p className="text-sm sm:text-base md:text-lg text-primary/60 font-medium leading-relaxed max-w-[480px] mx-auto italic">
-              Hành trình Elite đang chờ bạn. Hoàn tất thanh toán qua GoRide Pay để mở khóa ưu đãi độc quyền.
-            </p>
-          </div>
-
-          <div className="w-full space-y-6 md:space-y-8">
-            <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-3 md:gap-4 pb-6 md:pb-8 border-b border-primary/10">
-              <span className="text-[10px] sm:text-xs md:text-sm font-black text-primary/40 uppercase tracking-[0.2em] sm:tracking-[0.3em]">Thành tiền</span>
-              <div className="text-center sm:text-right">
-                <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-cta drop-shadow-[0_0_15px_rgba(202,138,4,0.15)] break-all">{Number(createdRental.totalPrice).toLocaleString('vi-VN')}</span>
-                <span className="text-xs sm:text-base md:text-lg font-bold text-cta ml-2 uppercase">VNĐ</span>
-              </div>
-            </div>
-
-            <div className="w-full">
-              <button
-                onClick={handleOnlinePayment}
-                disabled={paymentLoading}
-                className="w-full h-14 sm:h-20 md:h-24 rounded-2xl md:rounded-[2rem] bg-gradient-to-r from-cta to-yellow-600 text-white flex items-center justify-center gap-3 md:gap-4 text-[11px] sm:text-sm md:text-lg font-black tracking-[0.2em] sm:tracking-[0.3em] shadow-md sm:shadow-luxury-cta hover:shadow-luxury-cta-hover hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 group px-3 md:px-4"
-              >
-                {paymentLoading ? (
-                  <Loader2 className="animate-spin w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
-                ) : (
-                  <>
-                    <span className="truncate">THANH TOÁN NGAY</span>
-                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform shrink-0" />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 md:gap-3 opacity-50 w-full px-2">
-            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-primary shrink-0" />
-            <p className="text-[9px] sm:text-[10px] md:text-xs text-primary font-black uppercase tracking-widest text-center">
-              Bảo vệ bởi hệ thống mã hóa GoRide Shield
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    isSuccess && createdRental && (
+  if (isSuccess && createdRental) {
+    return (
       <main className="min-h-screen bg-background relative overflow-hidden py-16 md:py-24 px-4" style={{ width: '100vw', maxWidth: '100%' }}>
         {/* BACKGROUND ELEMENTS */}
         <div className="absolute inset-0 pointer-events-none">
@@ -421,8 +367,9 @@ function BookingContent() {
                 <span className="truncate">VỀ TRANG CHỦ</span>
               </Link>
             </div>
+            </div>
           </div>
-      </main>
+        </main>
     );
   }
 
