@@ -22,3 +22,25 @@ export const steps = [
   },
 ];
 
+export const advantages = [
+  {
+    iconName: 'fast',
+    title: 'Nhanh chóng',
+    description: 'Thủ tục đơn giản, nhận xe chỉ trong 5 phút sau khi đặt'
+  },
+  {
+    iconName: 'bike',
+    title: 'Đa dạng xe',
+    description: 'Hàng trăm mẫu xe từ phổ thông đến cao cấp cho bạn lựa chọn'
+  },
+  {
+    iconName: 'price',
+    title: 'Giá tốt nhất',
+    description: 'Cam kết mức giá cạnh tranh nhất thị trường, không phí ẩn'
+  },
+  {
+    iconName: 'shield',
+    title: 'An tâm 100%',
+    description: 'Xe được bảo trì định kỳ, bảo hiểm đầy đủ cho mọi chuyến đi'
+  }
+];
