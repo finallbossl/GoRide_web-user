@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { XCircle, ArrowLeft, RefreshCcw, HelpCircle } from 'lucide-react';
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function PaymentCancelPage() {
+function CancelContent() {
   const searchParams = useSearchParams();
   const orderCode = searchParams.get('orderCode');
 
@@ -74,5 +75,13 @@ export default function PaymentCancelPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function PaymentCancelPage() {
+  return (
+    <Suspense fallback={null}>
+      <CancelContent />
+    </Suspense>
   );
 }
