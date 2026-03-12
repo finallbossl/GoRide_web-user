@@ -1,47 +1,59 @@
-import { io, Socket } from 'socket.io-client';
+import Pusher from 'pusher-js';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://prn-232-be.vercel.app/api/v1';
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || API_URL.replace('/api/v1', '');
+const PUSHER_KEY = process.env.NEXT_PUBLIC_PUSHER_KEY || 'ab3a2b62b6523f45c70f';
+const PUSHER_CLUSTER = process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'ap1';
 
 class SocketService {
-    private socket: Socket | null = null;
+    private pusher: Pusher | null = null;
+    private channel: any = null;
 
     connect(userId: string) {
-        if (this.socket?.connected) return;
+        if (this.pusher) return;
 
-        this.socket = io(SOCKET_URL, {
-            transports: ['websocket', 'polling'],
-            reconnection: true,
+        this.pusher = new Pusher(PUSHER_KEY, {
+            cluster: PUSHER_CLUSTER,
+            forceTLS: true
         });
 
-        this.socket.on('connect', () => {
-            console.log('Successfully connected to socket server with ID:', this.socket?.id);
-            console.log('Emitting join_room for user:', userId);
-            this.socket?.emit('join_room', userId);
+        console.log('Connecting to Pusher channel:', userId);
+        this.channel = this.pusher.subscribe(userId);
+
+        // Bind connection success
+        this.pusher.connection.bind('connected', () => {
+            console.log('Successfully connected to Pusher');
         });
 
-        this.socket.on('disconnect', () => {
-            console.log('Disconnected from socket server');
-        });
+        // Handle admin room if necessary (though backend triggers to private userId)
+        // If the user is admin, also subscribe to admin-room
+        if (userId === 'admin-placeholder' || userId.startsWith('admin')) {
+             this.pusher.subscribe('admin-room');
+        }
     }
 
     onReceiveMessage(callback: (message: any) => void) {
-        this.socket?.on('receive_message', callback);
+        if (this.channel) {
+            this.channel.bind('receive_message', callback);
+        }
     }
 
     offReceiveMessage() {
-        this.socket?.off('receive_message');
+        if (this.channel) {
+            this.channel.unbind('receive_message');
+        }
     }
 
     sendMessage(payload: { receiverId?: string; content: string; isAI?: boolean }) {
-        console.log('Emitting send_message:', payload);
-        this.socket?.emit('send_message', payload);
+        // Pusher is used for receiving messages on Serverless. 
+        // Sending still happens via standard HTTP API in your other services.
+        // If there's a specific need to emit via socket, we keep the signature but explain.
+        console.warn('sendMessage via Pusher client is not recommended for Serverless. Use your API instead.');
     }
 
     disconnect() {
-        if (this.socket) {
-            this.socket.disconnect();
-            this.socket = null;
+        if (this.pusher) {
+            this.pusher.disconnect();
+            this.pusher = null;
+            this.channel = null;
         }
     }
 }
