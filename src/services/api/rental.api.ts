@@ -1,5 +1,5 @@
 import { httpClient } from '@/utils/httpClient';
-import { ApiResponse, CreateRentalDto, RentalFilterDto } from '@goride/shared';
+import { ApiResponse, CreateRentalDto, RentalFilterDto, RentalStatus } from '@goride/shared';
 
 /**
  * Rental API Service
@@ -31,5 +31,12 @@ export const rentalApi = {
    */
   getById: (id: string) => {
     return httpClient.get<ApiResponse>(`/rentals/${id}`);
+  },
+
+  /**
+   * Update rental status
+   */
+  updateStatus: (id: string, status: RentalStatus) => {
+    return httpClient.put<ApiResponse>(`/rentals/${id}/status`, { status });
   },
 };

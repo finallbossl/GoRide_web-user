@@ -5,7 +5,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { motorbikeApi, rentalApi, paymentApi, locationApi, promotionApi } from '@/services/api';
-import { Motorbike, CreateRentalDto, RentalStatus, DiscountType } from '@goride/shared';
+import { Motorbike, CreateRentalDto, RentalStatus, DiscountType, MotorbikeStatus } from '@goride/shared';
 import {
   Star, MapPin, Calendar, Clock, ShieldCheck,
   Heart, Share2, MessageSquare, ChevronRight,
@@ -155,7 +155,9 @@ function BookingContent() {
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [createdRental, setCreatedRental] = useState<any>(null);
-  const [paymentStatus, setPaymentStatus] = useState<string>('PENDING');
+  const [paymentStatus] = useState<string>('PENDING');
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Handle Online Payment
@@ -191,6 +193,36 @@ function BookingContent() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     // You could add a toast here if you have one
+  };
+
+  const handleCancelUnpaidBooking = async () => {
+    if (!createdRental?.id || !bike?.id || cancelLoading) return;
+
+    const confirmed = window.confirm('Bạn có chắc muốn hủy đơn này? Xe sẽ được mở lại để người khác đặt.');
+    if (!confirmed) return;
+
+    setCancelLoading(true);
+    setCancelError(null);
+
+    try {
+      const cancelRentalResponse = await rentalApi.updateStatus(createdRental.id, RentalStatus.CANCELLED);
+      if (!cancelRentalResponse.success) {
+        throw new Error(cancelRentalResponse.message || 'Không thể hủy đơn đặt xe.');
+      }
+
+      const updateBikeResponse = await motorbikeApi.updateStatus(bike.id, MotorbikeStatus.AVAILABLE);
+      if (!updateBikeResponse.success) {
+        throw new Error(updateBikeResponse.message || 'Đã hủy đơn nhưng chưa thể cập nhật trạng thái xe.');
+      }
+
+      setCreatedRental((prev: any) => ({ ...prev, status: RentalStatus.CANCELLED }));
+      setBike((prev) => (prev ? { ...prev, status: MotorbikeStatus.AVAILABLE } : prev));
+    } catch (err: any) {
+      console.error('Cancel booking failed:', err);
+      setCancelError(err?.message || 'Hủy đơn thất bại. Vui lòng thử lại sau.');
+    } finally {
+      setCancelLoading(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -299,7 +331,7 @@ function BookingContent() {
               </div>
             </div>
 
-            {bookingData.paymentMethod === 'online' && paymentStatus !== 'COMPLETED' && createdRental?.status !== 'CONFIRMED' && (
+            {bookingData.paymentMethod === 'online' && paymentStatus !== 'COMPLETED' && createdRental?.status !== 'CONFIRMED' && createdRental?.status !== RentalStatus.CANCELLED && (
               <div className="bg-gradient-to-br from-primary/5 to-transparent rounded-2xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-primary/10 space-y-8 md:space-y-10 shadow-md md:shadow-luxury-lg w-full block animate-in fade-in zoom-in-95 duration-700 delay-300">
                 <div className="flex flex-col items-center gap-6 md:gap-8 w-full">
                   <div className="bg-white p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] shadow-sm md:shadow-luxury-md border border-primary/10 relative overflow-hidden group">
@@ -326,7 +358,7 @@ function BookingContent() {
                     <div className="w-full">
                       <button
                         onClick={handleOnlinePayment}
-                        disabled={paymentLoading}
+                        disabled={paymentLoading || cancelLoading}
                         className="w-full h-14 sm:h-20 md:h-24 rounded-2xl md:rounded-[2rem] bg-gradient-to-r from-cta to-yellow-600 text-white flex items-center justify-center gap-3 md:gap-4 text-[11px] sm:text-sm md:text-lg font-black tracking-[0.2em] sm:tracking-[0.3em] shadow-md sm:shadow-luxury-cta hover:shadow-luxury-cta-hover hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 group px-3 md:px-4"
                       >
                         {paymentLoading ? (
@@ -338,6 +370,18 @@ function BookingContent() {
                           </>
                         )}
                       </button>
+
+                      <button
+                        onClick={handleCancelUnpaidBooking}
+                        disabled={cancelLoading || paymentLoading}
+                        className="w-full mt-3 h-12 sm:h-14 rounded-2xl border border-red-500/30 text-red-600 bg-red-50/70 hover:bg-red-100 transition-all text-[10px] sm:text-xs md:text-sm font-black tracking-[0.2em] sm:tracking-[0.25em] disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        {cancelLoading ? 'ĐANG HỦY ĐƠN...' : 'HỦY ĐƠN CHƯA THANH TOÁN'}
+                      </button>
+
+                      {cancelError && (
+                        <p className="text-red-500 text-xs font-semibold mt-3 text-center">{cancelError}</p>
+                      )}
                     </div>
                   </div>
 
@@ -367,9 +411,9 @@ function BookingContent() {
                 <span className="truncate">VỀ TRANG CHỦ</span>
               </Link>
             </div>
-            </div>
           </div>
-        </main>
+        </div>
+      </main>
     );
   }
 

@@ -1,5 +1,5 @@
 import { httpClient } from '@/utils/httpClient';
-import { ApiResponse, MotorbikeFilterDto } from '@goride/shared';
+import { ApiResponse, MotorbikeFilterDto, MotorbikeStatus } from '@goride/shared';
 
 /**
  * Motorbike API Service
@@ -17,5 +17,12 @@ export const motorbikeApi = {
    */
   getById: (id: string) => {
     return httpClient.get<ApiResponse>(`/motorbikes/${id}`);
+  },
+
+  /**
+   * Update motorbike status
+   */
+  updateStatus: (id: string, status: MotorbikeStatus) => {
+    return httpClient.put<ApiResponse>(`/motorbikes/${id}`, { status });
   },
 };
