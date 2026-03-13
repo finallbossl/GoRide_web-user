@@ -70,6 +70,7 @@ export interface Rental {
   totalPrice: number;
   numberOfDays: number;
   notes?: string;
+  promoCode?: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { rentalApi } from '@/services/api';
 import { Rental, RentalStatus } from '@goride/shared';
-import { Calendar, ChevronRight, MapPin, Clock, CreditCard, CheckCircle2, History, AlertCircle, Loader2, Upload, Trash2 } from 'lucide-react';
+import { Calendar, ChevronRight, MapPin, Clock, CreditCard, CheckCircle2, History, AlertCircle, Loader2, Upload, Trash2, Ticket } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -155,8 +155,13 @@ export default function MyRentalsPage() {
                               "px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest",
                               rental.payments?.status === 'COMPLETED' ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"
                             )}>
-                              {rental.payments?.status === 'COMPLETED' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                {rental.payments?.status === 'COMPLETED' ? 'Đã thanh toán' : 'Chưa thanh toán'}
                             </span>
+                            {rental.promoCode && (
+                              <span className="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest bg-cta/10 text-cta flex items-center gap-1">
+                                <Ticket size={10} /> {rental.promoCode}
+                              </span>
+                            )}
                           </div>
                           <h2 className="text-2xl lg:text-3xl font-bold text-primary mb-4 leading-tight group-hover:text-cta transition-colors">{rental.motorbike?.name || 'Xe Máy'}</h2>
                           <div className="flex flex-wrap items-center gap-6">

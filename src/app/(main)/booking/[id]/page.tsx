@@ -132,7 +132,12 @@ function BookingContent() {
     try {
       const response = await promotionApi.applyCode(promoCode.trim());
       if (response.success && response.data) {
-        setAppliedPromo(response.data);
+        const promo = response.data;
+        // Check min order value if possible now, but useMemo will handle it dynamically
+        if (totalPriceRaw < promo.minOrderValue) {
+          setPromoError(`Mã này yêu cầu đơn hàng tối thiểu ${promo.minOrderValue.toLocaleString('vi-VN')} VNĐ`);
+        }
+        setAppliedPromo(promo);
       } else {
         setPromoError('Mã khuyến mãi không hợp lệ hoặc đã hết hạn.');
       }
@@ -145,6 +150,12 @@ function BookingContent() {
 
   const discountAmount = useMemo(() => {
     if (!appliedPromo || !totalPriceRaw) return 0;
+    
+    // Check min order value
+    if (totalPriceRaw < (appliedPromo.minOrderValue || 0)) {
+        return 0;
+    }
+
     if (appliedPromo.discountType === DiscountType.PERCENTAGE) {
       return Math.round(totalPriceRaw * appliedPromo.discountValue / 100);
     }
@@ -253,7 +264,8 @@ function BookingContent() {
         endDate: new Date(endDate).toISOString(),
         pickupLocation: getFinalLocation('pickup'),
         returnLocation: getFinalLocation('return'),
-        notes: `SĐT liên hệ: ${bookingData.phone} | Phương thức: ${bookingData.paymentMethod}${appliedPromo ? ` | Mã KM: ${promoCode}` : ''}${bookingData.notes ? ` | Ghi chú: ${bookingData.notes}` : ''}`,
+        promoCode: appliedPromo ? promoCode.trim() : undefined,
+        notes: `SĐT liên hệ: ${bookingData.phone} | Phương thức: ${bookingData.paymentMethod}${bookingData.notes ? ` | Ghi chú: ${bookingData.notes}` : ''}`,
       };
 
       const response = await rentalApi.create(rentalDto);
