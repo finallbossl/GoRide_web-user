@@ -31,7 +31,7 @@ export default function FeaturedBikesSection() {
   }, []);
 
   return (
-    <section className="bg-[#FAF9F6] py-28 overflow-hidden relative">
+    <section className="relative overflow-hidden bg-[#fdf9f2] py-24 md:py-28">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-[#CA8A04]/20 to-transparent" />
       <div className="container">
         <SectionHeader
@@ -44,7 +44,7 @@ export default function FeaturedBikesSection() {
             <Loader2 className="animate-spin text-primary" size={40} />
           </div>
         ) : (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {bikes.map((bike: Motorbike) => {
               const bikeTypeLabel = bike.type === 'SCOOTER' ? 'Xe Tay Ga' : bike.type === 'MANUAL' ? 'Xe Số' : 'Xe Côn Tay';
               return (
@@ -70,8 +70,8 @@ export default function FeaturedBikesSection() {
           </div>
         )}
 
-        <div className="mt-16 flex justify-center">
-          <Link href="/motorbike" className="luxury-btn-outline group flex items-center gap-2 whitespace-nowrap">
+        <div className="mt-14 flex justify-center">
+          <Link href="/motorbike" className="group flex h-12 items-center gap-2 rounded-xl border border-primary/20 bg-white px-6 text-sm font-semibold text-primary transition-all hover:border-cta hover:text-cta">
             Xem Tất Cả Xe
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </Link>

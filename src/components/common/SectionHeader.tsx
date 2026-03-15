@@ -9,9 +9,9 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, subtitle, align = 'center', className }: SectionHeaderProps) {
   return (
-    <div 
+    <div
       className={cn(
-        "mb-20",
+        "mb-14 md:mb-16",
         align === 'center' && "text-center",
         align === 'left' && "text-left",
         align === 'right' && "text-right",
@@ -19,18 +19,18 @@ export default function SectionHeader({ title, subtitle, align = 'center', class
       )}
     >
       <div className={cn(
-        "inline-block mb-4 px-4 py-1.5 rounded-full bg-[#1C1917]/5 border border-[#1C1917]/10 text-[10px] uppercase tracking-[0.2em] font-black text-[#CA8A04] shadow-sm",
+        "mb-4 inline-flex items-center rounded-full border border-primary/10 bg-white px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-cta shadow-sm",
         align === 'center' && "mx-auto"
       )}>
-        Bộ sưu tập Elite
+        GoRide Collection
       </div>
-      <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black text-[#1C1917] mb-6 tracking-tight">
+      <h2 className="mb-5 font-heading text-4xl font-black tracking-tight text-primary md:text-5xl lg:text-6xl">
         {title}
       </h2>
-      
+
       {subtitle && (
         <p className={cn(
-          "max-w-5xl text-lg font-medium text-[#44403C]/60 leading-relaxed",
+          "max-w-3xl text-base leading-relaxed text-primary-muted md:text-lg",
           align === 'center' && "mx-auto text-center"
         )}>
           {subtitle}

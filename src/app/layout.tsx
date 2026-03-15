@@ -31,10 +31,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${plusJakartaSans.variable} ${outfit.variable} scroll-smooth`}>
-      <body className="antialiased font-sans selection:bg-cta selection:text-white">
+      <body className="app-shell font-sans antialiased selection:bg-cta selection:text-white">
         <AuthProvider>
           <Header />
-          <main>{children}</main>
+          <main className="pt-2">{children}</main>
           <Footer />
           <ChatWidget />
         </AuthProvider>
