@@ -2,15 +2,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1C1917;
-  --color-primary-muted: #44403C;
-  --color-cta: #CA8A04;
-  --color-cta-hover: #A16207;
-  --color-accent: #EAB308;
-  --color-surface: #FAFAF9;
-  --color-background: #FDFDFD;
-  --color-rich-text: #0C0A09;
-  
+  --color-primary: #16130f;
+  --color-primary-muted: #57534e;
+  --color-cta: #b45309;
+  --color-cta-hover: #92400e;
+  --color-accent: #f59e0b;
+  --color-surface: #f8f5ef;
+  --color-background: #fffdf8;
+  --color-rich-text: #1c1917;
+  --color-border: #e7e5e4;
+  --color-card: #fffaf2;
+  --color-ring: #d97706;
+
   --radius-luxury: 12px;
   --radius-luxury-lg: 20px;
   --radius-luxury-xl: 40px;
@@ -18,17 +21,11 @@
   --font-sans: "Jost", sans-serif;
   --font-heading: "Bodoni Moda", serif;
 
-  --shadow-soft-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-soft-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --shadow-luxury-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+  --shadow-soft-md: 0 8px 20px rgba(35, 27, 15, 0.08);
+  --shadow-soft-lg: 0 16px 32px rgba(35, 27, 15, 0.12);
+  --shadow-luxury-xl: 0 30px 60px rgba(35, 27, 15, 0.15);
+  --shadow-luxury-2xl: 0 40px 80px rgba(35, 27, 15, 0.2);
 
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
 }
 
 @layer base {
@@ -39,12 +36,17 @@
   body {
     @apply bg-background font-sans text-rich-text antialiased;
     line-height: 1.7;
+    background-image: radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.12), transparent 35%), radial-gradient(circle at 100% 100%, rgba(120, 53, 15, 0.08), transparent 30%);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading font-bold text-primary;
     line-height: 1.2;
-    word-wrap: break-word;
   }
 
   h1 {
@@ -56,25 +58,50 @@
   }
 
 
-  button, a {
-    @apply cursor-pointer;
+  input,
+  select,
+  textarea {
+    @apply outline-none;
   }
 
-  /* Force horizontal text layout globally */
-  * {
-    writing-mode: horizontal-tb !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ring) 35%, transparent);
+  }
+
+
+  button,
+  a {
+    @apply cursor-pointer;
   }
 }
 
 @layer components {
+  .app-shell {
+    @apply min-h-screen bg-background;
+  }
+
+  .surface-card {
+    @apply rounded-luxury-lg border border-border bg-card shadow-soft-md;
+  }
+
+  .ui-input {
+    @apply h-12 w-full rounded-xl border border-border bg-white px-4 text-sm font-medium text-rich-text shadow-sm transition placeholder:text-primary/30 focus:border-cta;
+  }
+
+  .ui-label {
+    @apply mb-2 block text-xs font-semibold uppercase tracking-[0.08em] text-primary-muted;
+  }
+
   .glass-card {
-    @apply bg-white/10 backdrop-blur-2xl border border-white/20 shadow-luxury-xl transition-all duration-500 hover:bg-white/15;
+    @apply border border-white/20 bg-white/15 backdrop-blur-2xl shadow-luxury-xl transition-all duration-500 hover:bg-white/25;
   }
 
   .glass-card-dark {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-luxury-xl transition-all duration-500 hover:bg-slate-900/50;
+    @apply border border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-luxury-xl transition-all duration-500 hover:bg-slate-900/50;
   }
 
   .liquid-glass {
@@ -82,15 +109,19 @@
   }
 
   .luxury-btn-primary {
-    @apply bg-cta text-white px-8 py-4 rounded-luxury font-semibold transition-all duration-200 hover:bg-cta-hover hover:shadow-soft-lg hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer whitespace-nowrap;
+    @apply whitespace-nowrap rounded-luxury bg-cta px-8 py-4 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-cta-hover hover:shadow-soft-lg active:scale-[0.98] cursor-pointer;
   }
 
   .luxury-btn-outline {
-    @apply border-2 border-primary text-primary px-8 py-4 rounded-luxury font-semibold transition-all duration-200 hover:bg-primary hover:text-white active:scale-[0.98] cursor-pointer whitespace-nowrap;
+    @apply whitespace-nowrap rounded-luxury border-2 border-primary px-8 py-4 font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-white active:scale-[0.98] cursor-pointer;
+  }
+
+  .luxury-btn-dark {
+    @apply whitespace-nowrap rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#26221d] hover:shadow-soft-lg active:scale-[0.98];
   }
 
   .container {
-    @apply mx-auto max-w-[1400px] px-6 lg:px-8;
+    @apply w-full mx-auto max-w-[1400px] px-6 lg:px-8;
   }
 }
 
@@ -100,43 +131,29 @@
   }
 
   .liquid-hover {
-    @apply transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:shadow-luxury-xl hover:-translate-y-2;
+    @apply transition-all duration-500 hover:shadow-luxury-xl hover:-translate-y-2;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   @keyframes liquid-drift {
-    0% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(2%, 4%) scale(1.05); }
-    66% { transform: translate(-3%, 2%) scale(0.95); }
-    100% { transform: translate(0, 0) scale(1); }
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+      transform: translate(2%, 4%) scale(1.05);
+    }
+
+    66% {
+      transform: translate(-3%, 2%) scale(0.95);
+    }
+
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
   }
 
   .animate-liquid {
     animation: liquid-drift 20s ease-in-out infinite;
   }
-
-  /* Force horizontal text layout */
-  .no-wrap {
-    white-space: nowrap !important;
-    overflow: visible !important;
-  }
-}
-
-/* Global fixes for text wrapping */
-h1, h2, h3, h4, h5, h6 {
-  max-width: 100% !important;
-  overflow-wrap: normal !important;
-}
-
-button, .luxury-btn-primary, .luxury-btn-outline {
-  white-space: nowrap !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* CRITICAL: Force horizontal text layout - highest priority */
-* {
-  writing-mode: horizontal-tb !important;
-  text-orientation: mixed !important;
-  direction: ltr !important;
 }

@@ -98,54 +98,6 @@ function MotorbikeContent() {
       </section>
 
       <div className="container -mt-16 relative z-30 pb-20">
-        {/* Search Bar */}
-        <div className="glass-card p-4 rounded-luxury-lg shadow-soft-lg border-primary/20 mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="px-6 py-4 border-b md:border-b-0 md:border-r border-primary/10">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-rich-text/40 mb-2">Điểm Nhận</label>
-              <div className="flex items-center gap-3">
-                <MapPin size={16} className="text-cta" />
-                <select
-                  className="w-full bg-transparent border-none outline-none font-medium text-primary cursor-pointer"
-                  value={selectedLocation || ''}
-                  onChange={(e) => setSelectedLocation(e.target.value ? Number(e.target.value) : null)}
-                >
-                  <option value="">Chọn địa điểm...</option>
-                  {locations.map((loc) => (
-                    <option key={loc.id} value={loc.id}>{loc.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="px-6 py-4 border-b md:border-b-0 md:border-r border-primary/10">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-rich-text/40 mb-2">Ngày Thuê</label>
-              <div className="flex items-center gap-3">
-                <Calendar size={16} className="text-cta" />
-                <input type="date" className="w-full bg-transparent border-none outline-none font-medium text-primary cursor-pointer" defaultValue="2026-01-25" />
-              </div>
-            </div>
-
-            <div className="px-6 py-4 border-b md:border-b-0 md:border-r border-primary/10">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-rich-text/40 mb-2">Thời Gian</label>
-              <div className="flex items-center gap-3">
-                <Clock size={16} className="text-cta" />
-                <select className="w-full bg-transparent border-none outline-none font-medium text-primary cursor-pointer">
-                  <option>3 Ngày</option>
-                  <option>1 Tuần</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="p-2">
-              <button className="luxury-btn-primary w-full flex items-center justify-center gap-2">
-                <Search size={18} />
-                Tìm Kiếm
-              </button>
-            </div>
-          </div>
-        </div>
-
         <div className="lg:grid lg:grid-cols-12 lg:gap-12">
           {/* Sidebar */}
           <aside className="hidden lg:col-span-3 lg:block">
@@ -275,21 +227,6 @@ function MotorbikeContent() {
                 <h3 className="font-heading text-2xl font-bold text-primary mb-4">Điều Khoản Thuê</h3>
                 <ul className="space-y-3">
                   {['Căn cước công dân / Passport', 'Bằng lái xe máy hợp lệ', 'Thanh toán trọn gói'].map(t => (
-                    <li key={t} className="flex items-center gap-3 text-sm font-medium text-rich-text/60">
-                      <span className="h-1.5 w-1.5 rounded-full bg-cta" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="glass-card p-8 rounded-luxury-lg border-primary/20">
-                <div className="h-12 w-12 flex items-center justify-center rounded-luxury bg-surface text-cta mb-6">
-                  <Info size={24} />
-                </div>
-                <h3 className="font-heading text-2xl font-bold text-primary mb-4">Chính Sách Phí</h3>
-                <ul className="space-y-3">
-                  {['Thời gian 24h/ngày', 'Phí trễ: 30.000đ/giờ', 'Bảo hiểm trọn gói'].map(t => (
                     <li key={t} className="flex items-center gap-3 text-sm font-medium text-rich-text/60">
                       <span className="h-1.5 w-1.5 rounded-full bg-cta" />
                       {t}
