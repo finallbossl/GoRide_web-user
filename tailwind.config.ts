@@ -33,7 +33,7 @@ const config: Config = {
         sm: "0.375rem",
       },
       fontFamily: {
-        sans: ["Jost", "sans-serif"],
+        sans: ["Inter", "Jost", "sans-serif"],
         heading: ["Bodoni Moda", "serif"],
       },
       boxShadow: {

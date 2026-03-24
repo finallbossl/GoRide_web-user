@@ -56,11 +56,11 @@ const HeroSection = () => {
           {/* Visual */}
           <div className="relative hidden lg:block">
             <div className="absolute -left-6 -top-6 h-24 w-24 rounded-2xl border border-white/30 bg-white/30 backdrop-blur" />
-            <div className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-luxury-xl border-4 border-white shadow-luxury-xl">
+            <div className="relative z-10 w-full h-[64vh] max-h-[760px] min-h-[420px] overflow-hidden rounded-luxury-xl border-4 border-white shadow-luxury-xl">
               <img
                 src="https://sgtravel.vn/wp-content/uploads/2020/11/Quy-Nhon-Phu-Yen-4-sao-1.jpg"
                 alt="GoRide Travel"
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
               />
             </div>
             {/* small badge removed per request */}
