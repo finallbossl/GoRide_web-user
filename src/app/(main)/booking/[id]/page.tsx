@@ -528,26 +528,26 @@ function BookingContent() {
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
-                <div className="relative group">
-                  <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Họ và Tên</label>
-                  <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
+                <div className="group space-y-2">
+                  <label className="block text-[11px] font-semibold text-primary/55 tracking-[0.03em]">Họ và tên</label>
+                  <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 focus-within:border-cta/25 focus-within:ring-2 focus-within:ring-cta/10 transition-all">
                     <User size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                     <input
                       value={bookingData.fullName}
                       onChange={(e) => setBookingData({ ...bookingData, fullName: e.target.value })}
-                      className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4"
+                      className="bg-transparent w-full outline-none font-medium text-primary text-base h-full"
                     />
                   </div>
                 </div>
-                <div className="relative group">
-                  <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Số điện thoại</label>
-                  <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
+                <div className="group space-y-2">
+                  <label className="block text-[11px] font-semibold text-primary/55 tracking-[0.03em]">Số điện thoại</label>
+                  <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 focus-within:border-cta/25 focus-within:ring-2 focus-within:ring-cta/10 transition-all">
                     <Phone size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                     <input
                       placeholder="0xxx xxx xxx"
                       value={bookingData.phone}
                       onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
-                      className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4"
+                      className="bg-transparent w-full outline-none font-medium text-primary text-base h-full"
                     />
                   </div>
                 </div>
@@ -610,33 +610,33 @@ function BookingContent() {
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <div className="relative group">
-                    <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Điểm nhận xe</label>
-                    <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm relative">
+                  <div className="group space-y-2">
+                    <label className="block text-[11px] font-semibold text-primary/55 tracking-[0.03em]">Điểm nhận xe</label>
+                    <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 focus-within:border-cta/25 focus-within:ring-2 focus-within:ring-cta/10 transition-all relative">
                       <MapPin size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                       <select
                         value={bookingData.pickupLocation}
                         onChange={(e) => setBookingData({ ...bookingData, pickupLocation: e.target.value })}
-                        className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4 appearance-none cursor-pointer"
+                        className="bg-transparent w-full outline-none font-medium text-primary text-base h-full appearance-none cursor-pointer"
                       >
                         {locations.map((loc) => (
                           <option key={loc.id} value={loc.name}>{loc.name}</option>
                         ))}
                         <option value="Giao xe tận nơi">Giao xe tận nơi (Liên hệ)</option>
                       </select>
-                      <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-primary/20 pointer-events-none mt-2" />
+                      <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/30 pointer-events-none" />
                     </div>
                   </div>
                   {bookingData.pickupLocation === 'Giao xe tận nơi' && (
-                    <div className="relative group animate-in slide-in-from-top-2 duration-300">
-                      <label className="absolute left-8 top-4 text-[10px] font-semibold text-cta/60 tracking-[0.04em] z-10 pointer-events-none">Địa chỉ nhận xe cụ thể</label>
-                      <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-cta/5 border border-cta/10 focus-within:border-cta/30 focus-within:ring-4 focus-within:ring-cta/5 transition-all">
+                    <div className="group space-y-2 animate-in slide-in-from-top-2 duration-300">
+                      <label className="block text-[11px] font-semibold text-cta/70 tracking-[0.03em]">Địa chỉ nhận xe cụ thể</label>
+                      <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-cta/5 border border-cta/15 focus-within:border-cta/35 focus-within:ring-2 focus-within:ring-cta/10 transition-all">
                         <LocateFixed size={20} className="text-cta/30 group-focus-within:text-cta transition-colors" />
                         <input
                           placeholder="Nhập địa chỉ nhà, khách sạn..."
                           value={bookingData.customPickupLocation}
                           onChange={(e) => setBookingData({ ...bookingData, customPickupLocation: e.target.value })}
-                          className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4"
+                          className="bg-transparent w-full outline-none font-medium text-primary text-base h-full"
                         />
                       </div>
                     </div>
@@ -644,33 +644,33 @@ function BookingContent() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="relative group">
-                    <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Điểm trả xe</label>
-                    <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm relative">
+                  <div className="group space-y-2">
+                    <label className="block text-[11px] font-semibold text-primary/55 tracking-[0.03em]">Điểm trả xe</label>
+                    <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 focus-within:border-cta/25 focus-within:ring-2 focus-within:ring-cta/10 transition-all relative">
                       <MapPin size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                       <select
                         value={bookingData.returnLocation}
                         onChange={(e) => setBookingData({ ...bookingData, returnLocation: e.target.value })}
-                        className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4 appearance-none cursor-pointer"
+                        className="bg-transparent w-full outline-none font-medium text-primary text-base h-full appearance-none cursor-pointer"
                       >
                         {locations.map((loc) => (
                           <option key={loc.id} value={loc.name}>{loc.name}</option>
                         ))}
                         <option value="Trả xe tại điểm hẹn">Trả xe tại điểm hẹn (Liên hệ)</option>
                       </select>
-                      <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-primary/20 pointer-events-none mt-2" />
+                      <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/30 pointer-events-none" />
                     </div>
                   </div>
                   {bookingData.returnLocation === 'Trả xe tại điểm hẹn' && (
-                    <div className="relative group animate-in slide-in-from-top-2 duration-300">
-                      <label className="absolute left-8 top-4 text-[10px] font-semibold text-cta/60 tracking-[0.04em] z-10 pointer-events-none">Địa chỉ trả xe cụ thể</label>
-                      <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-cta/5 border border-cta/10 focus-within:border-cta/30 focus-within:ring-4 focus-within:ring-cta/5 transition-all">
+                    <div className="group space-y-2 animate-in slide-in-from-top-2 duration-300">
+                      <label className="block text-[11px] font-semibold text-cta/70 tracking-[0.03em]">Địa chỉ trả xe cụ thể</label>
+                      <div className="flex items-center gap-3 h-14 px-4 rounded-2xl bg-cta/5 border border-cta/15 focus-within:border-cta/35 focus-within:ring-2 focus-within:ring-cta/10 transition-all">
                         <LocateFixed size={20} className="text-cta/30 group-focus-within:text-cta transition-colors" />
                         <input
                           placeholder="Nhập địa chỉ trả xe..."
                           value={bookingData.customReturnLocation}
                           onChange={(e) => setBookingData({ ...bookingData, customReturnLocation: e.target.value })}
-                          className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4"
+                          className="bg-transparent w-full outline-none font-medium text-primary text-base h-full"
                         />
                       </div>
                     </div>
@@ -678,15 +678,15 @@ function BookingContent() {
                 </div>
               </div>
 
-              <div className="relative group">
-                <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Ghi chú & Yêu cầu đặc biệt</label>
-                <div className="flex items-start gap-4 min-h-32 pl-8 pr-6 py-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
-                  <FileText size={20} className="text-primary/10 group-focus-within:text-cta transition-colors mt-4" />
+              <div className="group space-y-2">
+                <label className="block text-[11px] font-semibold text-primary/55 tracking-[0.03em]">Ghi chú & Yêu cầu đặc biệt</label>
+                <div className="flex items-start gap-3 min-h-28 px-4 py-3 rounded-2xl bg-[#FAF9F6] border border-primary/10 focus-within:border-cta/25 focus-within:ring-2 focus-within:ring-cta/10 transition-all">
+                  <FileText size={20} className="text-primary/20 group-focus-within:text-cta transition-colors mt-1" />
                   <textarea
                     placeholder="Ví dụ: Trang bị nón bảo hiểm Elite Gold, giao xe đúng 8 giờ sáng..."
                     value={bookingData.notes}
                     onChange={(e) => setBookingData({ ...bookingData, notes: e.target.value })}
-                    className="bg-transparent w-full outline-none font-bold text-primary text-base h-full pt-4 resize-none"
+                    className="bg-transparent w-full outline-none font-medium text-primary text-base h-full resize-none"
                     rows={3}
                   />
                 </div>
