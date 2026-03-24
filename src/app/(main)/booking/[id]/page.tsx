@@ -523,13 +523,13 @@ function BookingContent() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-primary">Thông tin thành viên</h3>
-                  <p className="text-xs text-primary/30 font-medium italic">Xác thực hồ sơ cho thủ tục bàn giao xe.</p>
+                  <p className="text-sm text-primary/45 font-medium">Xác thực hồ sơ cho thủ tục bàn giao xe.</p>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="relative group">
-                  <label className="absolute left-8 top-4 text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] z-10 pointer-events-none">Họ và Tên</label>
+                  <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Họ và Tên</label>
                   <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
                     <User size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                     <input
@@ -540,7 +540,7 @@ function BookingContent() {
                   </div>
                 </div>
                 <div className="relative group">
-                  <label className="absolute left-8 top-4 text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] z-10 pointer-events-none">Số điện thoại</label>
+                  <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Số điện thoại</label>
                   <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
                     <Phone size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                     <input
@@ -556,10 +556,10 @@ function BookingContent() {
               {/* Document Upload Area */}
               <div className="space-y-4">
                 <div className="flex items-baseline justify-between px-2">
-                  <h4 className="text-[11px] font-black text-primary/40 uppercase tracking-widest italic flex items-center gap-2">
+                  <h4 className="text-xs font-semibold text-primary/60 tracking-[0.04em] flex items-center gap-2">
                     <Camera size={14} className="text-cta" /> Xác thực GPLX / CCCD
                   </h4>
-                  <span className="text-[8px] font-black text-cta uppercase tracking-widest px-3 py-1 bg-cta/5 rounded-full">Yêu cầu gốc</span>
+                  <span className="text-[10px] font-semibold text-cta tracking-[0.04em] px-3 py-1 bg-cta/5 rounded-full">Yêu cầu gốc</span>
                 </div>
 
                 {!bookingData.documentImage ? (
@@ -572,7 +572,7 @@ function BookingContent() {
                     </div>
                     <div className="text-center">
                       <span className="text-sm font-bold text-primary mb-1 block">Tải tập tin hoặc chụp ảnh</span>
-                      <p className="text-[10px] font-medium text-primary/30 uppercase tracking-widest italic">Kéo thả ảnh GPLX hoặc CCCD của bạn vào đây</p>
+                      <p className="text-[11px] font-medium text-primary/45">Kéo thả ảnh GPLX hoặc CCCD của bạn vào đây</p>
                     </div>
                     <input type="file" hidden ref={fileInputRef} accept="image/*" onChange={handleImageUpload} />
                   </div>
@@ -587,7 +587,7 @@ function BookingContent() {
                       <X size={20} />
                     </button>
                     <div className="absolute bottom-6 left-6 right-6 bg-cta/95 backdrop-blur-md py-4 rounded-2xl text-center shadow-luxury-sm">
-                      <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                      <span className="text-[11px] font-semibold text-white tracking-[0.04em] flex items-center justify-center gap-2">
                         <CheckCircle2 size={14} /> Hình ảnh đã được xác thực
                       </span>
                     </div>
@@ -604,14 +604,14 @@ function BookingContent() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-primary">Hành trình & Yêu cầu</h3>
-                  <p className="text-xs text-primary/30 font-medium italic">Tùy chỉnh điểm giao nhận và yêu cầu đặc biệt.</p>
+                  <p className="text-sm text-primary/45 font-medium">Tùy chỉnh điểm giao nhận và yêu cầu đặc biệt.</p>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="relative group">
-                    <label className="absolute left-8 top-4 text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] z-10 pointer-events-none">Điểm nhận xe</label>
+                    <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Điểm nhận xe</label>
                     <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm relative">
                       <MapPin size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                       <select
@@ -629,7 +629,7 @@ function BookingContent() {
                   </div>
                   {bookingData.pickupLocation === 'Giao xe tận nơi' && (
                     <div className="relative group animate-in slide-in-from-top-2 duration-300">
-                      <label className="absolute left-8 top-4 text-[9px] font-black text-cta/40 uppercase tracking-[0.2em] z-10 pointer-events-none">Địa chỉ nhận xe cụ thể</label>
+                      <label className="absolute left-8 top-4 text-[10px] font-semibold text-cta/60 tracking-[0.04em] z-10 pointer-events-none">Địa chỉ nhận xe cụ thể</label>
                       <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-cta/5 border border-cta/10 focus-within:border-cta/30 focus-within:ring-4 focus-within:ring-cta/5 transition-all">
                         <LocateFixed size={20} className="text-cta/30 group-focus-within:text-cta transition-colors" />
                         <input
@@ -645,7 +645,7 @@ function BookingContent() {
 
                 <div className="space-y-4">
                   <div className="relative group">
-                    <label className="absolute left-8 top-4 text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] z-10 pointer-events-none">Điểm trả xe</label>
+                    <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Điểm trả xe</label>
                     <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm relative">
                       <MapPin size={20} className="text-primary/10 group-focus-within:text-cta transition-colors" />
                       <select
@@ -663,7 +663,7 @@ function BookingContent() {
                   </div>
                   {bookingData.returnLocation === 'Trả xe tại điểm hẹn' && (
                     <div className="relative group animate-in slide-in-from-top-2 duration-300">
-                      <label className="absolute left-8 top-4 text-[9px] font-black text-cta/40 uppercase tracking-[0.2em] z-10 pointer-events-none">Địa chỉ trả xe cụ thể</label>
+                      <label className="absolute left-8 top-4 text-[10px] font-semibold text-cta/60 tracking-[0.04em] z-10 pointer-events-none">Địa chỉ trả xe cụ thể</label>
                       <div className="flex items-center gap-4 h-20 pl-8 pr-6 rounded-[1.5rem] bg-cta/5 border border-cta/10 focus-within:border-cta/30 focus-within:ring-4 focus-within:ring-cta/5 transition-all">
                         <LocateFixed size={20} className="text-cta/30 group-focus-within:text-cta transition-colors" />
                         <input
@@ -679,7 +679,7 @@ function BookingContent() {
               </div>
 
               <div className="relative group">
-                <label className="absolute left-8 top-4 text-[9px] font-black text-primary/30 uppercase tracking-[0.2em] z-10 pointer-events-none">Ghi chú & Yêu cầu đặc biệt</label>
+                <label className="absolute left-8 top-4 text-[10px] font-semibold text-primary/45 tracking-[0.04em] z-10 pointer-events-none">Ghi chú & Yêu cầu đặc biệt</label>
                 <div className="flex items-start gap-4 min-h-32 pl-8 pr-6 py-6 rounded-[1.5rem] bg-[#FAF9F6] border border-primary/5 focus-within:border-cta/20 focus-within:ring-4 focus-within:ring-cta/5 transition-all shadow-inner-sm">
                   <FileText size={20} className="text-primary/10 group-focus-within:text-cta transition-colors mt-4" />
                   <textarea
@@ -720,29 +720,29 @@ function BookingContent() {
               {/* Itinerary Details */}
               <div className="p-10 md:p-12 space-y-10">
                 <div className="space-y-6">
-                  <h4 className="text-[10px] font-black text-primary/20 uppercase tracking-[0.4em] italic mb-4">Chi tiết hành trình</h4>
+                  <h4 className="text-xs font-semibold text-primary/50 tracking-[0.08em] mb-4">Chi tiết hành trình</h4>
                   <div className="grid grid-cols-2 gap-8">
                     <div className="relative p-6 rounded-3xl bg-[#FAF9F6] border border-primary/5 group hover:bg-white hover:border-cta/20 transition-all">
-                      <p className="text-[9px] font-black text-primary/30 uppercase tracking-widest mb-3">Nhận xe</p>
+                      <p className="text-[10px] font-semibold text-primary/45 tracking-[0.04em] mb-3">Nhận xe</p>
                       <div className="flex items-center gap-3">
                         <Calendar size={18} className="text-cta" />
                         <input
                           type="date"
                           value={startDate}
                           onChange={(e) => setStartDate(e.target.value)}
-                          className="bg-transparent text-xs font-bold text-primary outline-none uppercase cursor-pointer"
+                          className="bg-transparent text-sm font-semibold text-primary outline-none cursor-pointer"
                         />
                       </div>
                     </div>
                     <div className="relative p-6 rounded-3xl bg-[#FAF9F6] border border-primary/5 group hover:bg-white hover:border-cta/20 transition-all">
-                      <p className="text-[9px] font-black text-primary/30 uppercase tracking-widest mb-3">Trả xe</p>
+                      <p className="text-[10px] font-semibold text-primary/45 tracking-[0.04em] mb-3">Trả xe</p>
                       <div className="flex items-center gap-3">
                         <Calendar size={18} className="text-primary/20 group-hover:text-cta transition-colors" />
                         <input
                           type="date"
                           value={endDate}
                           onChange={(e) => setEndDate(e.target.value)}
-                          className="bg-transparent text-xs font-bold text-primary outline-none uppercase cursor-pointer"
+                          className="bg-transparent text-sm font-semibold text-primary outline-none cursor-pointer"
                         />
                       </div>
                     </div>
@@ -751,7 +751,7 @@ function BookingContent() {
                   <div className="flex items-center justify-between p-6 rounded-3xl bg-cta/5 border border-cta/10">
                     <div className="flex items-center gap-3">
                       <Clock size={18} className="text-cta" />
-                      <span className="text-xs font-bold text-primary italic uppercase tracking-widest">Thời gian thuê: {days} Ngày</span>
+                      <span className="text-sm font-semibold text-primary tracking-[0.04em]">Thời gian thuê: {days} ngày</span>
                     </div>
                     <ChevronDown size={14} className="text-cta/30" />
                   </div>
@@ -759,28 +759,28 @@ function BookingContent() {
 
                 {/* Price Breakdown */}
                 <div className="pt-10 border-t border-primary/5 space-y-4">
-                  <div className="flex justify-between items-center text-xs font-bold text-primary/40 uppercase tracking-widest px-2">
+                  <div className="flex justify-between items-center text-sm font-semibold text-primary/60 tracking-[0.04em] px-2">
                     <span>Giá thuê xe ({days} ngày)</span>
                     <span className="text-primary">{totalPrice}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs font-bold text-primary/40 uppercase tracking-widest px-2">
+                  <div className="flex justify-between items-center text-sm font-semibold text-primary/60 tracking-[0.04em] px-2">
                     <span>Phí dịch vụ Elite</span>
                     <span className="text-emerald-500">Miễn phí</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs font-bold text-primary/40 uppercase tracking-widest px-2">
+                  <div className="flex justify-between items-center text-sm font-semibold text-primary/60 tracking-[0.04em] px-2">
                     <span>Bảo hiểm Elite Basic</span>
                     <span className="text-primary">Bao gồm</span>
                   </div>
 
                   {/* Promo Code Input */}
                   <div className="pt-4 space-y-3">
-                    <p className="text-[9px] font-black text-primary/30 uppercase tracking-[0.3em] px-2 flex items-center gap-2">
+                    <p className="text-[10px] font-semibold text-primary/55 tracking-[0.04em] px-2 flex items-center gap-2">
                       <Ticket size={12} className="text-cta" /> Mã khuyến mãi
                     </p>
 
                     {topPromotions.length > 0 && !appliedPromo && (
                       <div className="mx-2 space-y-2">
-                        <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600">
+                        <p className="text-[10px] font-semibold tracking-[0.04em] text-emerald-600">
                           Mã gợi ý cho đơn này ({topPromotions.length})
                         </p>
 
@@ -797,7 +797,7 @@ function BookingContent() {
                                 className="w-full rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 flex items-center justify-between gap-3 text-left hover:bg-emerald-100 transition-all disabled:opacity-50"
                               >
                                 <div className="min-w-0">
-                                  <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700 truncate">
+                                  <p className="text-[11px] font-semibold tracking-[0.04em] text-emerald-700 truncate">
                                     {promo.code}
                                   </p>
                                   <p className="text-[10px] font-bold text-emerald-600 truncate">
@@ -807,9 +807,9 @@ function BookingContent() {
 
                                 <div className="shrink-0 text-right">
                                   {isBest && (
-                                    <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">Tốt nhất</p>
+                                    <p className="text-[9px] font-semibold tracking-[0.04em] text-emerald-500 mb-1">Tốt nhất</p>
                                   )}
-                                  <span className="inline-flex h-8 items-center rounded-xl bg-emerald-600 px-3 text-[9px] font-black uppercase tracking-widest text-white">
+                                  <span className="inline-flex h-8 items-center rounded-xl bg-emerald-600 px-3 text-[10px] font-semibold tracking-[0.04em] text-white">
                                     Chọn mã
                                   </span>
                                 </div>
@@ -827,13 +827,13 @@ function BookingContent() {
                           onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); setAppliedPromo(null); }}
                           placeholder="NHẬP MÃ GIẢM GIÁ"
                           disabled={!!appliedPromo}
-                          className="w-full h-12 pl-4 pr-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 text-xs font-black text-primary uppercase tracking-widest outline-none focus:border-cta/40 focus:ring-2 focus:ring-cta/10 transition-all placeholder:text-primary/20 disabled:opacity-60"
+                          className="w-full h-12 pl-4 pr-4 rounded-2xl bg-[#FAF9F6] border border-primary/10 text-sm font-semibold text-primary tracking-[0.02em] outline-none focus:border-cta/40 focus:ring-2 focus:ring-cta/10 transition-all placeholder:text-primary/30 disabled:opacity-60"
                         />
                       </div>
                       {appliedPromo ? (
                         <button
                           onClick={() => { setAppliedPromo(null); setPromoCode(''); setPromoError(null); }}
-                          className="h-12 px-4 rounded-2xl bg-red-50 border border-red-200 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-100 transition-all flex items-center gap-2"
+                          className="h-12 px-4 rounded-2xl bg-red-50 border border-red-200 text-red-500 text-[11px] font-semibold tracking-[0.04em] hover:bg-red-100 transition-all flex items-center gap-2"
                         >
                           <X size={14} /> Bỏ
                         </button>
@@ -841,7 +841,7 @@ function BookingContent() {
                         <button
                           onClick={handleApplyPromo}
                           disabled={!promoCode.trim() || promoLoading}
-                          className="h-12 px-4 rounded-2xl bg-cta text-white text-[10px] font-black uppercase tracking-widest hover:bg-cta/90 transition-all disabled:opacity-40 flex items-center gap-2 shrink-0"
+                          className="h-12 px-4 rounded-2xl bg-cta text-white text-[11px] font-semibold tracking-[0.04em] hover:bg-cta/90 transition-all disabled:opacity-40 flex items-center gap-2 shrink-0"
                         >
                           {promoLoading ? <Loader2 size={14} className="animate-spin" /> : 'Áp dụng'}
                         </button>
@@ -856,7 +856,7 @@ function BookingContent() {
                       <div className="flex items-center justify-between px-2 py-3 rounded-2xl bg-emerald-50 border border-emerald-200 animate-in fade-in zoom-in-95 duration-300">
                         <div className="flex items-center gap-2">
                           <CheckCircle2 size={14} className="text-emerald-500" />
-                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{appliedPromo.title}</span>
+                          <span className="text-[11px] font-semibold text-emerald-600 tracking-[0.04em]">{appliedPromo.title}</span>
                         </div>
                         <span className="text-[10px] font-black text-emerald-600">
                           -{appliedPromo.discountType === DiscountType.PERCENTAGE ? `${appliedPromo.discountValue}%` : `${appliedPromo.discountValue.toLocaleString('vi-VN')}đ`}
@@ -864,7 +864,7 @@ function BookingContent() {
                       </div>
                     )}
                     {appliedPromo && discountAmount > 0 && (
-                      <div className="flex justify-between items-center text-xs font-bold uppercase tracking-widest px-2">
+                      <div className="flex justify-between items-center text-sm font-semibold tracking-[0.04em] px-2">
                         <span className="text-emerald-500">Giảm giá</span>
                         <span className="text-emerald-500">-{discountAmount.toLocaleString('vi-VN')} VNĐ</span>
                       </div>
@@ -874,7 +874,7 @@ function BookingContent() {
                   <div className="mt-8 p-8 rounded-3xl bg-primary text-white flex justify-between items-center shadow-luxury-xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 h-full w-40 bg-white/5 skew-x-[-20deg] translate-x-10 transition-transform group-hover:translate-x-0" />
                     <div className="relative z-10">
-                      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-cta mb-2 italic">Tổng thanh toán</p>
+                      <p className="text-[11px] font-semibold tracking-[0.08em] text-cta mb-2">Tổng thanh toán</p>
                       <p className="text-4xl font-bold tracking-tighter">
                         {finalPrice.toLocaleString('vi-VN')} <span className="text-lg font-medium text-white/40 italic">VNĐ</span>
                       </p>
@@ -898,19 +898,19 @@ function BookingContent() {
                 <button
                   disabled={!bookingData.fullName || !bookingData.documentImage || submitting || loading}
                   onClick={handleSubmit}
-                  className="luxury-btn-primary w-full py-7 flex items-center justify-center gap-4 text-xs font-black tracking-[0.4em] shadow-luxury-2xl group disabled:opacity-50 disabled:grayscale transition-all"
+                  className="luxury-btn-primary w-full py-7 flex items-center justify-center gap-4 text-sm font-semibold tracking-[0.08em] shadow-luxury-2xl group disabled:opacity-50 disabled:grayscale transition-all"
                 >
                   {submitting ? (
                     <Loader2 className="animate-spin" size={18} />
                   ) : (
                     <>
-                      XÁC NHẬN ĐẶT XE NGAY
+                      Xác nhận đặt xe ngay
                       <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
                     </>
                   )}
                 </button>
 
-                <p className="text-center text-[10px] font-black text-primary/20 uppercase tracking-[0.3em] italic">
+                <p className="text-center text-[11px] font-medium text-primary/45 tracking-[0.04em]">
                   Bằng việc đặt xe, bạn đồng ý với <span className="text-cta">Điều khoản Elite</span> của chúng tôi.
                 </p>
               </div>
