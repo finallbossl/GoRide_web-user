@@ -5,7 +5,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useRef, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { motorbikeApi, rentalApi, paymentApi, locationApi, promotionApi } from '@/services/api';
-import { Motorbike, CreateRentalDto, RentalStatus, DiscountType, MotorbikeStatus } from '@goride/shared';
+import { Motorbike, CreateRentalDto, RentalStatus, DiscountType, MotorbikeStatus, Promotion } from '@goride/shared';
 import {
   Star, MapPin, Calendar, Clock, ShieldCheck,
   Heart, Share2, MessageSquare, ChevronRight,
@@ -123,20 +123,38 @@ function BookingContent() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
   const [appliedPromo, setAppliedPromo] = useState<any>(null);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
 
-  const handleApplyPromo = async () => {
-    if (!promoCode.trim()) return;
+  const calculatePromoDiscount = (promo: Promotion, basePrice: number) => {
+    if (basePrice < (promo.minOrderValue || 0)) {
+      return 0;
+    }
+
+    if (promo.discountType === DiscountType.PERCENTAGE) {
+      return Math.round((basePrice * promo.discountValue) / 100);
+    }
+
+    return Math.min(promo.discountValue, basePrice);
+  };
+
+  const applyPromoByCode = async (code: string) => {
+    const normalizedCode = code.trim().toUpperCase();
+    if (!normalizedCode) return;
+
     setPromoLoading(true);
     setPromoError(null);
     setAppliedPromo(null);
+
     try {
-      const response = await promotionApi.applyCode(promoCode.trim());
+      const response = await promotionApi.applyCode(normalizedCode);
       if (response.success && response.data) {
-        const promo = response.data;
-        // Check min order value if possible now, but useMemo will handle it dynamically
+        const promo = response.data as Promotion;
         if (totalPriceRaw < promo.minOrderValue) {
           setPromoError(`Mã này yêu cầu đơn hàng tối thiểu ${promo.minOrderValue.toLocaleString('vi-VN')} VNĐ`);
+          return;
         }
+
+        setPromoCode(normalizedCode);
         setAppliedPromo(promo);
       } else {
         setPromoError('Mã khuyến mãi không hợp lệ hoặc đã hết hạn.');
@@ -148,12 +166,58 @@ function BookingContent() {
     }
   };
 
+  const handleApplyPromo = async () => {
+    await applyPromoByCode(promoCode);
+  };
+
+  const handleApplySuggestedPromo = async (code: string) => {
+    await applyPromoByCode(code);
+  };
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      try {
+        const response = await promotionApi.getAll();
+        if (response.success && response.data) {
+          setPromotions(response.data as Promotion[]);
+        }
+      } catch (fetchError) {
+        console.error('Failed to fetch promotions for booking:', fetchError);
+      }
+    };
+
+    fetchPromotions();
+  }, []);
+
+  const eligiblePromotions = useMemo(() => {
+    const now = new Date();
+
+    return promotions.filter((promo) => {
+      const isInDateRange = (!promo.startDate || new Date(promo.startDate) <= now) && (!promo.endDate || new Date(promo.endDate) >= now);
+      return promo.isActive && isInDateRange && totalPriceRaw >= (promo.minOrderValue || 0);
+    });
+  }, [promotions, totalPriceRaw]);
+
+  const topPromotions = useMemo(() => {
+    if (!eligiblePromotions.length) return [] as Promotion[];
+
+    return [...eligiblePromotions]
+      .sort((a, b) => {
+        const discountA = calculatePromoDiscount(a, totalPriceRaw);
+        const discountB = calculatePromoDiscount(b, totalPriceRaw);
+        return discountB - discountA;
+      })
+      .slice(0, 4);
+  }, [eligiblePromotions, totalPriceRaw]);
+
+  const bestPromotion = topPromotions[0] || null;
+
   const discountAmount = useMemo(() => {
     if (!appliedPromo || !totalPriceRaw) return 0;
-    
+
     // Check min order value
     if (totalPriceRaw < (appliedPromo.minOrderValue || 0)) {
-        return 0;
+      return 0;
     }
 
     if (appliedPromo.discountType === DiscountType.PERCENTAGE) {
@@ -713,6 +777,49 @@ function BookingContent() {
                     <p className="text-[9px] font-black text-primary/30 uppercase tracking-[0.3em] px-2 flex items-center gap-2">
                       <Ticket size={12} className="text-cta" /> Mã khuyến mãi
                     </p>
+
+                    {topPromotions.length > 0 && !appliedPromo && (
+                      <div className="mx-2 space-y-2">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600">
+                          Mã gợi ý cho đơn này ({topPromotions.length})
+                        </p>
+
+                        <div className="grid gap-2">
+                          {topPromotions.map((promo) => {
+                            const saving = calculatePromoDiscount(promo, totalPriceRaw);
+                            const isBest = bestPromotion?.id === promo.id;
+
+                            return (
+                              <button
+                                key={promo.id}
+                                onClick={() => handleApplySuggestedPromo(promo.code)}
+                                disabled={promoLoading}
+                                className="w-full rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 flex items-center justify-between gap-3 text-left hover:bg-emerald-100 transition-all disabled:opacity-50"
+                              >
+                                <div className="min-w-0">
+                                  <p className="text-[11px] font-black uppercase tracking-widest text-emerald-700 truncate">
+                                    {promo.code}
+                                  </p>
+                                  <p className="text-[10px] font-bold text-emerald-600 truncate">
+                                    Tiết kiệm {saving.toLocaleString('vi-VN')} VNĐ
+                                  </p>
+                                </div>
+
+                                <div className="shrink-0 text-right">
+                                  {isBest && (
+                                    <p className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">Tốt nhất</p>
+                                  )}
+                                  <span className="inline-flex h-8 items-center rounded-xl bg-emerald-600 px-3 text-[9px] font-black uppercase tracking-widest text-white">
+                                    Chọn mã
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex gap-2">
                       <div className="flex-1 relative group">
                         <input

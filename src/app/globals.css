@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -33,10 +33,38 @@
     scroll-behavior: smooth;
   }
 
+  /* Ensure readable root sizing for consistent typography */
+  html,
+  body {
+    font-size: 16px;
+  }
+
   body {
     @apply bg-background font-sans text-rich-text antialiased;
-    line-height: 1.7;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-kerning: normal;
+    -webkit-font-kerning: normal;
     background-image: radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.12), transparent 35%), radial-gradient(circle at 100% 100%, rgba(120, 53, 15, 0.08), transparent 30%);
+  }
+
+  /* Paragraphs: comfortable measure, spacing and weight for readability */
+  p {
+    @apply text-base md:text-lg text-primary-muted leading-relaxed mb-6;
+    hyphens: auto;
+  }
+
+  /* Utility wrapper for long-form content to keep optimal measure */
+  .readable {
+    max-width: 70ch;
+    margin-inline: auto;
+  }
+
+  a {
+    -webkit-text-decoration-skip-ink: auto;
+    text-decoration-skip-ink: auto;
   }
 
   h1,
@@ -46,15 +74,20 @@
   h5,
   h6 {
     @apply font-heading font-bold text-primary;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    /* Enable optical sizing / opsz for Bodoni Moda variable font when available */
+    font-variation-settings: "opsz" 48;
   }
 
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
+    letter-spacing: -0.03em;
   }
 
   h2 {
     @apply text-3xl md:text-4xl lg:text-5xl;
+    letter-spacing: -0.02em;
   }
 
 
@@ -62,6 +95,13 @@
   select,
   textarea {
     @apply outline-none;
+  }
+
+  /* Lead paragraph for nicer hero/intro text */
+  .lead {
+    @apply text-lg md:text-xl text-primary-muted font-medium;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
 
   input:focus-visible,
@@ -155,5 +195,32 @@
 
   .animate-liquid {
     animation: liquid-drift 20s ease-in-out infinite;
+  }
+
+  /* Justified text utility for long-form content */
+  .justified {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  /* Badge number for list items inside cards */
+  .badge-number {
+    width: 44px;
+    height: 44px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, var(--color-cta) 0%, rgba(234, 179, 8, 0.9) 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 6px 18px rgba(34, 24, 18, 0.12);
+  }
+
+  /* Slightly larger card padding on small screens to create breathing room */
+  .surface-card {
+    padding: 1.25rem;
+    /* override to ensure consistent padding */
   }
 }
