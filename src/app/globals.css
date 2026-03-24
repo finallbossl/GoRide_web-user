@@ -18,8 +18,8 @@
   --radius-luxury-lg: 20px;
   --radius-luxury-xl: 40px;
 
-  --font-sans: "Jost", sans-serif;
-  --font-heading: "Bodoni Moda", serif;
+  --font-sans: var(--font-plus-jakarta), "Inter", "Jost", sans-serif;
+  --font-heading: var(--font-plus-jakarta), "Inter", "Jost", sans-serif;
 
   --shadow-soft-md: 0 8px 20px rgba(35, 27, 15, 0.08);
   --shadow-soft-lg: 0 16px 32px rgba(35, 27, 15, 0.12);
@@ -41,7 +41,7 @@
 
   body {
     @apply bg-background font-sans text-rich-text antialiased;
-    line-height: 1.6;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -52,7 +52,7 @@
 
   /* Paragraphs: comfortable measure, spacing and weight for readability */
   p {
-    @apply text-base md:text-lg text-primary-muted leading-relaxed mb-6;
+    @apply text-base md:text-lg text-rich-text leading-relaxed mb-6;
     hyphens: auto;
   }
 
@@ -73,28 +73,31 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-bold text-primary;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    /* Enable optical sizing / opsz for Bodoni Moda variable font when available */
-    font-variation-settings: "opsz" 48;
+    @apply font-heading font-extrabold text-primary;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
   }
 
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
   }
 
   h2 {
     @apply text-3xl md:text-4xl lg:text-5xl;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
 
 
   input,
   select,
   textarea {
-    @apply outline-none;
+    @apply outline-none font-sans text-[15px] font-medium;
+    letter-spacing: 0;
+  }
+
+  button {
+    @apply font-sans font-semibold;
   }
 
   /* Lead paragraph for nicer hero/intro text */
